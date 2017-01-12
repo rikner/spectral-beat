@@ -1,17 +1,47 @@
-import React from 'react';
+import React, { PropTypes, Component } from 'react';
+import { connect } from 'react-redux';
+
 import SettingsOverlay from '/client/components/SettingsOverlay';
 import ColorCanvas from '/client/components/ColorCanvas';
 import ControlPanel from '/client/components/ControlPanel';
 
-export default class SpectralBeatMainView extends React.Component {
+import settingsActions from '/client/actions/actionCreators';
+
+class SpectralBeatMainView extends Component {
+  componentDidMount() {
+    this.props.setSettingsVisibility(true);
+  }
   render() {
+    const { settingsAreVisible } = this.props;
     return (
       <div>
         <h1>SpectralBeat</h1>
         <ColorCanvas />
-        <SettingsOverlay />
+        {
+          settingsAreVisible? <SettingsOverlay /> : null
+        }
         <ControlPanel />
       </div>
     );
   }
 }
+
+SpectralBeatMainView.propTypes = {
+  settingsAreVisible: PropTypes.bool.isRequired,
+  setSettingsVisibility: PropTypes.func.isRequired
+}
+
+const mapStateToProps = ({ settings }) => ({
+  settingsAreVisible: settings.settingsAreVisible,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setSettingsVisibility: (visible) => {
+    dispatch(settingsActions.setSettingsVisibility(visible));
+  }
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SpectralBeatMainView)
