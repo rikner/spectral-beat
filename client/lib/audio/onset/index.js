@@ -1,5 +1,5 @@
 const onsetValues = new Array(100);
-for (var i = 0; i < onsetValues.length; i++) {
+for (let i = 0; i < onsetValues.length; i++) {
     onsetValues[i] = 0;
 }
 
@@ -18,44 +18,38 @@ const computeSpectralFlux = (spectrum) => {
     let flux = 0;
     for (let i = 0; i < spectrum.length; i++) {
         let diff = spectrum[i] - previousSpectrum[i];
-
         if (diff < 0) continue;
         diff *= diff;
-
         flux += diff;
     }
-
     flux = Math.sqrt(flux);
     flux /= (spectrum.length);
-
     previousSpectrum.set(spectrum.subarray(0));
-
     return flux;
 };
 
-
 const computeThreshold = (arr) => {
-    let threshold = 0;
-    for (let i = 0; i < arr.length; i++) {
-        threshold += arr[i];
-    }
-    threshold = threshold / arr.length;
-    return threshold;
-};
-
-// const computeThreshold = (arr) => {
-//     let sum = arr.reduce(add, 0);
-//     return sum / arr.length;
-// };
-
-const add = (previousValue, currentValue) => {
-    return (previousValue + currentValue);
+    const meanValue = mean(arr);
+    const medianValue = median(arr);
+    return Math.max(meanValue + (2 * medianValue));
 };
 
 const checkForRecentPeak = (arr, threshold) => {
-
     const isLocalMaximum = (arr[arr.length - 3] < arr[arr.length - 2]) && (arr[arr.length - 2] > arr[arr.length - 1]);
     const isAboveThreshold = (arr[arr.length - 2] > threshold);
-
     return isLocalMaximum && isAboveThreshold;
+};
+
+const mean = (numArray) => {
+    const sum = numArray.reduce((a, b) => a + b, 0);
+    return sum / numArray.length;
+};
+
+const median = (numArray) => {
+    // always remember to hard copy the array when flashSorting
+    const sortedNumArray = numArray.slice().sort((a, b) => a - b);
+    const half = Math.floor(sortedNumArray.length / 2);
+
+    if (sortedNumArray.length & 1) { return sortedNumArray[half]; }
+    return (sortedNumArray[half - 1] + sortedNumArray[half]) / 2.0;
 };
