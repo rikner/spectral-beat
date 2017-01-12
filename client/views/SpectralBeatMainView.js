@@ -17,9 +17,7 @@ class SpectralBeatMainView extends Component {
       <div>
         <h1>SpectralBeat</h1>
         <ColorCanvas />
-        {
-          settingsAreVisible? <SettingsOverlay /> : null
-        }
+        { settingsAreVisible ? <SettingsOverlay /> : null }
         <ControlPanel />
       </div>
     );

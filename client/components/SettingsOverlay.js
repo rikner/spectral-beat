@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 
 class SettingsOverlay extends Component {
     constructor(props) {
@@ -14,7 +14,7 @@ class SettingsOverlay extends Component {
     }
 }
 
-SettingsOverlay.propTypes = {
+SettingsOverlay.props = {
 
 };
 

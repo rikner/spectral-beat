@@ -1,13 +1,23 @@
-import React, {Component} from 'react';
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 
-class ColorCanvas extends Component {
-    render() {
-        return (
-            <div>
-                ColorCanvas
-            </div>
-        );
-    }
-}
 
-export default ColorCanvas;
+const ColorCanvas = ({ currentColor }) => {
+    return (
+        <div className={'wrapper'} style={{ backgroundColor: currentColor }}>
+            ColorCanvas
+        </div>
+    );
+};
+
+ColorCanvas.props = {
+    currentColor: PropTypes.string.isRequired,
+};
+
+const mapStateToProps = ({ canvas }) => ({
+    currentColor: canvas.currentColor,
+});
+
+export default connect(mapStateToProps)(ColorCanvas);
+
+// Sonifikation als Wegleiter für Blinde
