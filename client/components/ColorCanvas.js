@@ -4,7 +4,13 @@ import { connect } from 'react-redux';
 
 const ColorCanvas = ({ currentColor }) => {
     return (
-        <div className={'wrapper'} style={{ backgroundColor: currentColor }}>
+        <div
+            style={{
+                backgroundColor: currentColor,
+                height: 600,
+                width: 600,
+            }}
+        >
             ColorCanvas
         </div>
     );
@@ -19,5 +25,3 @@ const mapStateToProps = ({ canvas }) => ({
 });
 
 export default connect(mapStateToProps)(ColorCanvas);
-
-// Sonifikation als Wegleiter für Blinde

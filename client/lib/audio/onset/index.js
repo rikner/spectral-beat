@@ -5,14 +5,18 @@ for (let i = 0; i < onsetValues.length; i++) {
 
 const previousSpectrum = new Uint8Array(256);
 
-export default detectOnsets = (spectrum) => {
+export default detectOnsets = (spectrum, onOnsetDetected = defautOnOnsetDetected) => {
     const spectralFlux = computeSpectralFlux(spectrum);
     onsetValues.shift();
     onsetValues.push(spectralFlux);
     const currentThreshold = computeThreshold(onsetValues);
     const isPeak = checkForRecentPeak(onsetValues, currentThreshold);
-    if (isPeak) console.log('onset detected');
+    if (isPeak) onOnsetDetected();
 };
+
+const defautOnOnsetDetected = () => {
+    console.log('onset detected');
+}
 
 const computeSpectralFlux = (spectrum) => {
     let flux = 0;

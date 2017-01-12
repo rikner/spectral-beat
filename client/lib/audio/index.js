@@ -6,12 +6,11 @@ let analyserNode = null;
 let onsetNode = null;
 let gainNode = null;
 
-export function startAudioProcessing() {
+let onsetDetected = null;
+
+export function startAudioProcessing(onOnsetDetected) {
+    if (onOnsetDetected) onsetDetected = onOnsetDetected;
     if (!hasGetUserMedia()) onMicrophoneFail('no getUserMedia available');
-
-    // navigator.mediaDevices.getUserMedia({ audio: true })
-    // .then(startAudioProcessing, onMicrophoneFail);
-
     navigator.mediaDevices.getUserMedia({ audio: true }).then(function(mediaStream) {
         setupAudioGraph(mediaStream);
     }).catch(function(err) {
@@ -24,6 +23,8 @@ export function stopAudioProcessing() {
     analyserNode && analyserNode.disconnect();
     onsetNode && onsetNode.disconnect();
     gainNode && gainNode.disconnect();
+
+    onsetDetected = null;
 }
 
 function setupAudioGraph(mediaStream) {
@@ -55,19 +56,14 @@ function onMicrophoneFail(reason) {
     console.error(reason);
 }
 
-function onsetAudioProcessingCallback(audioProcessingEvent) {
-    let inputBuffer = audioProcessingEvent.inputBuffer;
-    let outputBuffer = audioProcessingEvent.outputBuffer;
-
-    let dataArray = new Uint8Array(analyserNode.frequencyBinCount);
+function onsetAudioProcessingCallback(/*audioProcessingEvent*/) {
+    const dataArray = new Uint8Array(analyserNode.frequencyBinCount);
     analyserNode.getByteTimeDomainData(dataArray);
 
-    detectOnsets(dataArray);
+    detectOnsets(dataArray, onsetDetected);
 }
 
 function hasGetUserMedia() {
-    const getUserMediaExists = !!(navigator.mediaDevices.getUserMedia || navigator.mediaDevices.webkitGetUserMedia ||
+    return !!(navigator.mediaDevices.getUserMedia || navigator.mediaDevices.webkitGetUserMedia ||
             navigator.mediaDevices.mozGetUserMedia || navigator.mediaDevices.msGetUserMedia);
-
-    return getUserMediaExists;
 }
