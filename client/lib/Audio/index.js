@@ -1,4 +1,4 @@
-import detectOnsets from './onset';
+import detectOnsets from './Onset';
 
 let audioContext = null;
 let inputNode = null;
@@ -11,9 +11,9 @@ let onsetDetected = null;
 export function startAudioProcessing(onOnsetDetected) {
     if (onOnsetDetected) onsetDetected = onOnsetDetected;
     if (!hasGetUserMedia()) onMicrophoneFail('no getUserMedia available');
-    navigator.mediaDevices.getUserMedia({ audio: true }).then(function(mediaStream) {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((mediaStream) => {
         setupAudioGraph(mediaStream);
-    }).catch(function(err) {
+    }).catch((err) => {
         onMicrophoneFail(err);
     });
 }

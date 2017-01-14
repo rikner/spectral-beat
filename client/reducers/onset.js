@@ -7,7 +7,7 @@ const initialState = {
     isRunning: false,
 };
 
-export default function settings(state = initialState, action = {}) {
+export default function onsetDetection(state = initialState, action = {}) {
     switch (action.type) {
         case SET_ONSET_DETECTION_RUNNING:
             return {

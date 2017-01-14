@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import SettingsOverlay from '/client/components/SettingsOverlay';
 import ColorCanvas from '/client/components/ColorCanvas';
 import ControlPanel from '/client/components/ControlPanel';
+import OnsetDetectionController from '/client/components/OnsetDetectionController';
 import settingsActions from '/client/actions/actionCreators';
 
 class SpectralBeatMainView extends Component {
@@ -17,6 +18,7 @@ class SpectralBeatMainView extends Component {
                 <ColorCanvas />
                 <ControlPanel />
                 { settingsAreVisible ? <SettingsOverlay /> : null }
+                <OnsetDetectionController />
             </div>
         );
     }

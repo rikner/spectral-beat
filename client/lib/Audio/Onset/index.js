@@ -57,7 +57,7 @@ const mean = (numArray) => {
 
 const median = (numArray) => {
     // always remember to hard copy the array when flashSorting
-    console.warn("remember to check result of sortedNumArray");
+    // console.warn("remember to check result of sortedNumArray");
     const sortedNumArray = numArray.slice().sort((a, b) => a - b);
     const half = Math.floor(sortedNumArray.length / 2);
 
