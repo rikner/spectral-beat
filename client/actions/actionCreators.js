@@ -1,6 +1,9 @@
 import {
     SET_SETTINGS_VISIBILITY,
+    TOGGLE_SETTINGS_VISIBILITY,
     SET_CANVAS_COLOR,
+    TOGGLE_ONSET_DETECTION_RUNNING,
+    SET_ONSET_DETECTION_RUNNING,
 } from './actionTypes';
 
 export const setSettingsVisibility = settingsAreVisible => ({
@@ -9,6 +12,19 @@ export const setSettingsVisibility = settingsAreVisible => ({
 });
 
 export const setCanvasColor = color => ({
-    type:  SET_CANVAS_COLOR,
+    type: SET_CANVAS_COLOR,
     color,
+});
+
+export const toggleSettingsVisibility = () => ({
+    type: TOGGLE_SETTINGS_VISIBILITY,
+});
+
+export const toggleOnsetDetectionRunning = () => ({
+    type: TOGGLE_ONSET_DETECTION_RUNNING,
+});
+
+export const setOnsetDetectionRunning = isRunning => ({
+    type: SET_ONSET_DETECTION_RUNNING,
+    isRunning,
 });

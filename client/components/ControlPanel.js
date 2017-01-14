@@ -1,51 +1,57 @@
-import React, { Component } from 'react';
-import Button from '/client/components/Button';
-import { startAudioProcessing, stopAudioProcessing } from '/client/lib/audio';
+import React, { PropTypes, Component } from 'react';
+import ControlButton from '/client/components/Button';
 import { connect } from 'react-redux';
-import settingsActions from '/client/actions/actionCreators';
+import actions from '/client/actions/actionCreators';
 
 class ControlPanel extends Component {
     render() {
-        const { setCanvasColor } = this.props;
+        const { toggleSettingsVisibility, setOnsetDetectionRunning } = this.props;
         return (
-            <div>
-                <Button
+            <div
+                style={{
+                    position: 'relative',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-around',
+                }}
+            >
+                <ControlButton
                     label='Start'
                     onClick={() => {
-                        startAudioProcessing(() => {
-                            setCanvasColor(getRandomColor());
-                        });
+                        setOnsetDetectionRunning(true);
                     }}
                 />
-                <Button
+                <ControlButton
                     label='Stop'
-                    onClick={stopAudioProcessing}
+                    onClick={() => {
+                        setOnsetDetectionRunning(false);
+                    }}
                 />
-                <Button
+                <ControlButton
                     label='Settings'
-                    onClick={() => {}}
+                    onClick={toggleSettingsVisibility}
                 />
             </div>
         );
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        setCanvasColor: (color) => {
-            dispatch(settingsActions.setCanvasColor(color));
-        },
-    };
+ControlPanel.propTypes = {
+    toggleSettingsVisibility: PropTypes.func.isRequired,
+    setOnsetDetectionRunning: PropTypes.func.isRequired,
 };
 
+const mapDispatchToProps = dispatch => ({
+    setCanvasColor: (color) => {
+        dispatch(actions.setCanvasColor(color));
+    },
+    toggleSettingsVisibility: () => {
+        dispatch(actions.toggleSettingsVisibility());
+    },
+    setOnsetDetectionRunning: (isRunning) => {
+        dispatch(actions.setOnsetDetectionRunning(isRunning));
+    },
+});
+
 export default connect(null, mapDispatchToProps)(ControlPanel);
-
-
-function getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++ ) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}

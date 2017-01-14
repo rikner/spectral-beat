@@ -1,23 +1,23 @@
 import {
-    SET_SETTINGS_VISIBILITY,
-    TOGGLE_SETTINGS_VISIBILITY,
+    SET_ONSET_DETECTION_RUNNING,
+    TOGGLE_ONSET_DETECTION_RUNNING,
 } from '/client/actions/actionTypes';
 
 const initialState = {
-    settingsAreVisible: false,
+    isRunning: false,
 };
 
 export default function settings(state = initialState, action = {}) {
     switch (action.type) {
-        case SET_SETTINGS_VISIBILITY:
+        case SET_ONSET_DETECTION_RUNNING:
             return {
                 ...state,
-                settingsAreVisible: action.settingsAreVisible,
+                isRunning: action.isRunning,
             };
-        case TOGGLE_SETTINGS_VISIBILITY:
+        case TOGGLE_ONSET_DETECTION_RUNNING:
             return {
                 ...state,
-                settingsAreVisible: !state.settingsAreVisible,
+                isRunning: !state.isRunning,
             };
         default:
             return state;

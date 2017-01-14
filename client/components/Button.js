@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-const Button = ({ label, onClick }) => (
+const ControlButton = ({ label, onClick }) => (
     <div style={styles.wrapper}>
         <button type='button' onClick={onClick}>
             {label}
@@ -14,9 +14,9 @@ const styles = {
     },
 };
 
-Button.propTypes = {
+ControlButton.propTypes = {
     label: PropTypes.string.isRequired,
     onClick: PropTypes.func.isRequired,
 };
 
-export default Button;
+export default ControlButton;

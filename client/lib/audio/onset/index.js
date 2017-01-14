@@ -1,9 +1,15 @@
-const onsetValues = new Array(100);
-for (let i = 0; i < onsetValues.length; i++) {
-    onsetValues[i] = 0;
-}
+export const settings = {
+    inputBinCount: 256,
+};
 
-const previousSpectrum = new Uint8Array(256);
+const previousSpectrum = new Uint8Array(settings.inputBinCount);
+const onsetValues = new Array(100);
+
+(function () {
+    for (let i = 0; i < onsetValues.length; i++) {
+        onsetValues[i] = 0;
+    }
+}());
 
 export default detectOnsets = (spectrum, onOnsetDetected = defautOnOnsetDetected) => {
     const spectralFlux = computeSpectralFlux(spectrum);
@@ -16,7 +22,7 @@ export default detectOnsets = (spectrum, onOnsetDetected = defautOnOnsetDetected
 
 const defautOnOnsetDetected = () => {
     console.log('onset detected');
-}
+};
 
 const computeSpectralFlux = (spectrum) => {
     let flux = 0;
@@ -51,6 +57,7 @@ const mean = (numArray) => {
 
 const median = (numArray) => {
     // always remember to hard copy the array when flashSorting
+    console.warn("remember to check result of sortedNumArray");
     const sortedNumArray = numArray.slice().sort((a, b) => a - b);
     const half = Math.floor(sortedNumArray.length / 2);
 

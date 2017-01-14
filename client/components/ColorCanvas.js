@@ -2,19 +2,16 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 
-const ColorCanvas = ({ currentColor }) => {
-    return (
-        <div
-            style={{
-                backgroundColor: currentColor,
-                height: 600,
-                width: 600,
-            }}
-        >
-            ColorCanvas
-        </div>
-    );
-};
+const ColorCanvas = ({ currentColor }) => (
+    <div
+        style={{
+            backgroundColor: currentColor,
+            height: '100%',
+            width: '100%',
+            position: 'fixed',
+        }}
+    />
+);
 
 ColorCanvas.props = {
     currentColor: PropTypes.string.isRequired,
