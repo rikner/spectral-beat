@@ -1,8 +1,8 @@
 import React, { PropTypes, Component } from 'react';
-import { startAudioProcessing, stopAudioProcessing } from '/client/lib/Audio';
+import { startAudioProcessing, stopAudioProcessing } from '/client/lib/onset-detection';
 import { connect } from 'react-redux';
 import actions from '/client/actions/actionCreators';
-import getRandomColor from '/client/lib/randomColor';
+import getRandomColor from '/client/lib/helpers';
 
 const propTypes = {
     onsetDetectionIsRunning: PropTypes.bool.isRequired,

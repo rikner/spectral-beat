@@ -1,4 +1,4 @@
-import detectOnsets from './Onset';
+import detectOnsets from './detect-onsets';
 
 let audioContext = null;
 let inputNode = null;
@@ -6,10 +6,15 @@ let analyserNode = null;
 let onsetNode = null;
 let gainNode = null;
 
-let onsetDetected = null;
+let onOnsetDetetected = null;
 
-export function startAudioProcessing(onOnsetDetected) {
-    if (onOnsetDetected) onsetDetected = onOnsetDetected;
+export function startAudioProcessing(onsetDetectedCallback) {
+    if (!onsetDetectedCallback) {
+        console.error('no onset detected callback passed');
+        return;
+    }
+    onOnsetDetetected = onsetDetectedCallback;
+
     if (!hasGetUserMedia()) onMicrophoneFail('no getUserMedia available');
     navigator.mediaDevices.getUserMedia({ audio: true }).then((mediaStream) => {
         setupAudioGraph(mediaStream);
@@ -24,7 +29,7 @@ export function stopAudioProcessing() {
     onsetNode && onsetNode.disconnect();
     gainNode && gainNode.disconnect();
 
-    onsetDetected = null;
+    onOnsetDetetected = null;
 }
 
 function setupAudioGraph(mediaStream) {
@@ -60,7 +65,7 @@ function onsetAudioProcessingCallback(/*audioProcessingEvent*/) {
     const dataArray = new Uint8Array(analyserNode.frequencyBinCount);
     analyserNode.getByteTimeDomainData(dataArray);
 
-    detectOnsets(dataArray, onsetDetected);
+    detectOnsets(dataArray, onOnsetDetetected);
 }
 
 function hasGetUserMedia() {
