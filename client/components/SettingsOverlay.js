@@ -1,14 +1,12 @@
 import React, { Component, PropTypes } from 'react';
+import OnsetGraph from './OnsetGraph';
 
 class SettingsOverlay extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <div>
                 SettingsOverlay
+                <OnsetGraph />
             </div>
         );
     }

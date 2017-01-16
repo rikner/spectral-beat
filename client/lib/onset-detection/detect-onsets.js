@@ -1,6 +1,8 @@
 export const settings = {
-    inputBinCount: 256,
+    inputBinCount: 512,
 };
+
+export const onProcessCallbacks = [];
 
 const previousSpectrum = new Uint8Array(settings.inputBinCount);
 const onsetValues = new Array(100);
@@ -18,6 +20,15 @@ export default detectOnsets = (spectrum, onOnsetDetected = defautOnOnsetDetected
     const currentThreshold = computeThreshold(onsetValues);
     const isPeak = checkForRecentPeak(onsetValues, currentThreshold);
     if (isPeak) onOnsetDetected();
+    onAudioProcessed();
+};
+
+const onAudioProcessed = () => {
+    if (onProcessCallbacks.length) {
+        onProcessCallbacks.forEach((onProcess) => {
+            onProcess(onsetValues);
+        });
+    }
 };
 
 const defautOnOnsetDetected = () => {

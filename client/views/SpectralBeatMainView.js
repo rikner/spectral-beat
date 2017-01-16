@@ -16,7 +16,6 @@ class SpectralBeatMainView extends Component {
         return (
             <div>
                 <ColorCanvas />
-                <ControlPanel />
                 { settingsAreVisible ? <SettingsOverlay /> : null }
                 <OnsetDetectionController />
             </div>

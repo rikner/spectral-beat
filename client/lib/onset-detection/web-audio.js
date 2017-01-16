@@ -40,10 +40,10 @@ function setupAudioGraph(mediaStream) {
 
     // fft
     analyserNode = audioContext.createAnalyser();
-    analyserNode.fftSize = 256;
+    analyserNode.fftSize = 512;
 
     // onset
-    onsetNode = audioContext.createScriptProcessor(512, 1, 1);
+    onsetNode = audioContext.createScriptProcessor(1024, 1, 1);
     onsetNode.onaudioprocess = onsetAudioProcessingCallback;
 
     // gain

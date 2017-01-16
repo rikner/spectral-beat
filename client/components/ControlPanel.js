@@ -1,11 +1,15 @@
 import React, { PropTypes, Component } from 'react';
 import ControlButton from '/client/components/Button';
-import { connect } from 'react-redux';
-import actions from '/client/actions/actionCreators';
+
+const propTypes = {
+    onClickStart: PropTypes.func.isRequired,
+    onClickStop: PropTypes.func.isRequired,
+    onClickSettings: PropTypes.func.isRequired,
+};
 
 class ControlPanel extends Component {
     render() {
-        const { toggleSettingsVisibility, setOnsetDetectionRunning } = this.props;
+        const { onClickStart, onClickStop, onClickSettings } = this.props;
         return (
             <div
                 style={{
@@ -18,40 +22,21 @@ class ControlPanel extends Component {
             >
                 <ControlButton
                     label='Start'
-                    onClick={() => {
-                        setOnsetDetectionRunning(true);
-                    }}
+                    onClick={onClickStart}
                 />
                 <ControlButton
                     label='Stop'
-                    onClick={() => {
-                        setOnsetDetectionRunning(false);
-                    }}
+                    onClick={onClickStop}
                 />
                 <ControlButton
                     label='Settings'
-                    onClick={toggleSettingsVisibility}
+                    onClick={onClickSettings}
                 />
             </div>
         );
     }
 }
 
-ControlPanel.propTypes = {
-    toggleSettingsVisibility: PropTypes.func.isRequired,
-    setOnsetDetectionRunning: PropTypes.func.isRequired,
-};
+ControlPanel.propTypes = propTypes;
 
-const mapDispatchToProps = dispatch => ({
-    setCanvasColor: (color) => {
-        dispatch(actions.setCanvasColor(color));
-    },
-    toggleSettingsVisibility: () => {
-        dispatch(actions.toggleSettingsVisibility());
-    },
-    setOnsetDetectionRunning: (isRunning) => {
-        dispatch(actions.setOnsetDetectionRunning(isRunning));
-    },
-});
-
-export default connect(null, mapDispatchToProps)(ControlPanel);
+export default ControlPanel;

@@ -1,10 +1,12 @@
 import {
     SET_ONSET_DETECTION_RUNNING,
     TOGGLE_ONSET_DETECTION_RUNNING,
+    SET_ONSET_VALUES,
 } from '/client/actions/actionTypes';
 
 const initialState = {
     isRunning: false,
+    onsetValues: [],
 };
 
 export default function onsetDetection(state = initialState, action = {}) {
@@ -18,6 +20,11 @@ export default function onsetDetection(state = initialState, action = {}) {
             return {
                 ...state,
                 isRunning: !state.isRunning,
+            };
+        case SET_ONSET_VALUES:
+            return {
+                ...state,
+                onsetValues: action.onsetValues,
             };
         default:
             return state;
