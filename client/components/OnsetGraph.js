@@ -23,10 +23,18 @@ class OnsetGraph extends Component {
         for (let i = 0; i < onsetData.length; i++) {
             onsetCanvasCtx.fillRect(i * 2, h, 1, -onsetData[i] * onsetScale);
         }
+
+        // threshold
+        const threshold = 1;
+        for (let i = 0; i < onsetData.length; i++) {
+            onsetCanvasCtx.fillStyle = 'rgba(255, 83, 13, 1)';
+            onsetCanvasCtx.fillRect(i * 2, h - threshold * onsetScale, 2, 1);
+            onsetCanvasCtx.fillStyle = 'rgba(255, 83, 13, 0.5)';
+            onsetCanvasCtx.fillRect(i * 2, h, 1, -threshold * onsetScale);
+        }
     }
 
     render() {
-        const onsetValues = this.props.onsetValues;
         return (
             <canvas ref={(canvas) => { this.canvas = canvas; }} width={w} height={h} />
         );
@@ -37,10 +45,8 @@ OnsetGraph.propTypes = {
     onsetValues: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
 
-const mapStateToProps = (state) => {
-    return {
-        onsetValues: state.onsetDetection.onsetValues,
-    };
-};
+const mapStateToProps = state => ({
+    onsetValues: state.onsetDetection.onsetValues,
+});
 
 export default connect(mapStateToProps)(OnsetGraph);

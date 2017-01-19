@@ -3,7 +3,7 @@ import {
 } from '/client/actions/actionTypes';
 
 const initialState = {
-    currentColor: 'white',
+    currentColor: 'black',
 };
 
 export default function canvas(state = initialState, action = {}) {

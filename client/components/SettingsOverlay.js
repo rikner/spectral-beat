@@ -4,10 +4,9 @@ import OnsetGraph from './OnsetGraph';
 class SettingsOverlay extends Component {
     render() {
         return (
-            <div>
-                SettingsOverlay
+            <div style={{ position: 'absolute', zIndex: 10 }}>
                 <OnsetGraph />
-            </div>
+            </div >
         );
     }
 }
