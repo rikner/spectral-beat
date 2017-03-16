@@ -10,7 +10,7 @@ const propTypes = {
     setNewRandomColor: PropTypes.func.isRequired,
     toggleSettingsVisibility: PropTypes.func.isRequired,
     setOnsetDetectionRunning: PropTypes.func.isRequired,
-    setOnsetValues: PropTypes.func.isRequired,
+    setOnsetData: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -31,16 +31,16 @@ const mapDispatchToProps = dispatch => ({
     setOnsetDetectionRunning: (isRunning) => {
         dispatch(actions.setOnsetDetectionRunning(isRunning));
     },
-    setOnsetValues: (onsetValues) => {
-        dispatch(actions.setOnsetValues(onsetValues));
+    setOnsetData: (onsetData) => {
+        dispatch(actions.setOnsetData(onsetData));
     },
 });
 
 class OnsetDetectionController extends Component {
 
     componentDidMount() {
-        onProcessCallbacks.push((onsetValues) => {
-            this.props.setOnsetValues(onsetValues.slice());
+        onProcessCallbacks.push((onsetData) => {
+            this.props.setOnsetData(onsetData);
         });
     }
 

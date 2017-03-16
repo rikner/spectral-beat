@@ -4,7 +4,7 @@ import {
     SET_CANVAS_COLOR,
     TOGGLE_ONSET_DETECTION_RUNNING,
     SET_ONSET_DETECTION_RUNNING,
-    SET_ONSET_VALUES,
+    SET_ONSET_DATA,
 } from './actionTypes';
 
 export const setSettingsVisibility = settingsAreVisible => ({
@@ -30,7 +30,7 @@ export const setOnsetDetectionRunning = isRunning => ({
     isRunning,
 });
 
-export const setOnsetValues = onsetValues => ({
-    type: SET_ONSET_VALUES,
-    onsetValues,
-})
+export const setOnsetData = onsetData => ({
+    type: SET_ONSET_DATA,
+    onsetData,
+});

@@ -5,7 +5,11 @@ export const settings = {
 export const onProcessCallbacks = [];
 
 const previousSpectrum = new Uint8Array(settings.inputBinCount);
-const onsetValues = new Array(100);
+const onsetValues = new Array(50);
+
+let currentThreshold = 0;
+let currentValue = 0;
+let currentIsPeak = false;
 
 (function () {
     for (let i = 0; i < onsetValues.length; i++) {
@@ -14,19 +18,23 @@ const onsetValues = new Array(100);
 }());
 
 export default detectOnsets = (spectrum, onOnsetDetected = defautOnOnsetDetected) => {
-    const spectralFlux = computeSpectralFlux(spectrum);
+    currentValue = computeSpectralFlux(spectrum);
     onsetValues.shift();
-    onsetValues.push(spectralFlux);
-    const currentThreshold = computeThreshold(onsetValues);
-    const isPeak = checkForRecentPeak(onsetValues, currentThreshold);
-    if (isPeak) onOnsetDetected();
+    onsetValues.push(currentValue);
+    currentThreshold = computeThreshold(onsetValues);
+    currentIsPeak = checkForRecentPeak(onsetValues, currentThreshold);
+    if (currentIsPeak) onOnsetDetected();
     onAudioProcessed();
 };
 
 const onAudioProcessed = () => {
     if (onProcessCallbacks.length) {
         onProcessCallbacks.forEach((onProcess) => {
-            onProcess(onsetValues);
+            onProcess({
+                value: onsetValues[onsetValues.length - 1],
+                threshold: currentThreshold,
+                isPeak: currentIsPeak,
+            });
         });
     }
 };
@@ -36,13 +44,21 @@ const defautOnOnsetDetected = () => {
 };
 
 const computeSpectralFlux = (spectrum) => {
-    let flux = 0;
-    for (let i = 0; i < spectrum.length; i++) {
-        let diff = spectrum[i] - previousSpectrum[i];
-        if (diff < 0) continue;
+   let flux = spectrum.reduce((prev, cur, i) => {
+        let diff = previousSpectrum[i] - cur;
+        if (diff<0) return prev;
         diff *= diff;
-        flux += diff;
-    }
+        return prev + diff;
+    }, 0);
+
+    // let flux = 0;
+    // for (let i = 0; i < spectrum.length; i++) {
+    //     let diff = spectrum[i] - previousSpectrum[i];
+    //     if (diff < 0) continue;
+    //     diff *= diff;
+    //     flux += diff;
+    // }
+
     flux = Math.sqrt(flux);
     flux /= (spectrum.length);
     previousSpectrum.set(spectrum.subarray(0));
