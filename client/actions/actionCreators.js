@@ -5,6 +5,8 @@ import {
     TOGGLE_ONSET_DETECTION_RUNNING,
     SET_ONSET_DETECTION_RUNNING,
     SET_ONSET_DATA,
+    SET_CALCULATE_THRESHOLD,
+    SET_THRESHOLD,
 } from './actionTypes';
 
 export const setSettingsVisibility = settingsAreVisible => ({
@@ -33,4 +35,14 @@ export const setOnsetDetectionRunning = isRunning => ({
 export const setOnsetData = onsetData => ({
     type: SET_ONSET_DATA,
     onsetData,
+});
+
+export const setThreshold = threshold => ({
+    type: SET_THRESHOLD,
+    threshold,
+});
+
+export const setCalculateThreshold = value => ({
+    type: SET_CALCULATE_THRESHOLD,
+    value,
 });
