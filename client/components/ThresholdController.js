@@ -1,17 +1,18 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import actions from '/client/actions/actionCreators';
+import Range from '@mapbox/react-range';
 
 const propTypes = {
     setThreshold: PropTypes.func.isRequired,
     setCalculateThreshold: PropTypes.func.isRequired,
     threshold: PropTypes.number.isRequired,
-    calculateThreshold: PropTypes.bool.isRequired,
+    autoThreshold: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
     threshold: state.onsetDetection.onsetData.threshold,
-    calculateThreshold: state.onsetDetection.calculateThreshold,
+    autoThreshold: state.onsetDetection.autoThreshold,
 });
 
 const mapDispatchToProps = {
@@ -27,15 +28,15 @@ class ThresholdController extends Component {
     }
 
     toggleCheckboxChange() {
-        this.props.setCalculateThreshold(!this.props.calculateThreshold);
+        this.props.setCalculateThreshold(!this.props.autoThreshold);
     }
 
     handleRangeChange() {
-
+        this.props.setThreshold(this.rangeInput.value);
     }
 
     render() {
-        const autoTresholdIsOn = this.props.calculateThreshold;
+        const autoTresholdIsOn = this.props.autoThreshold;
         return (
             <div>
                 <input
@@ -43,13 +44,15 @@ class ThresholdController extends Component {
                     checked={autoTresholdIsOn}
                     onChange={this.toggleCheckboxChange}
                 />
-                <label htmlFor='calculateThreshold'>Auto Threshold</label>
-
-                <input
+                <label htmlFor='autoThreshold'>Auto Threshold</label>
+                <Range
+                    ref={(component) => { this.rangeInput = component; }}
+                    className='slider'
+                    onChange={this.handleRangeChange}
                     type='range'
                     value={this.props.threshold}
-                    onChange={this.handleRangeChange}
-                    disable={autoTresholdIsOn}
+                    min={0}
+                    max={100}
                 />
             </div>
         );

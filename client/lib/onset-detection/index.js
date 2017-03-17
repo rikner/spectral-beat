@@ -1,9 +1,10 @@
 import { startAudioProcessing, stopAudioProcessing } from './web-audio';
-import { onProcessCallbacks } from './detect-onsets';
+import { onProcessCallbacks, setCalculateThreshold } from './detect-onsets';
 
 export {
     startAudioProcessing,
     stopAudioProcessing,
     onProcessCallbacks,
+    setCalculateThreshold,
 };
 
