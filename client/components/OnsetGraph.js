@@ -55,6 +55,7 @@ class OnsetGraph extends Component {
         }
 
 
+
         onsetCanvasCtx.fillStyle = 'blue';
         for (let i = 0; i < thresholdValues.length; i++) {
             onsetCanvasCtx.fillRect(i, h, 1, -thresholdValues[i] * onsetScale);

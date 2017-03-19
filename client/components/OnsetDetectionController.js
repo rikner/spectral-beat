@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import { startAudioProcessing, stopAudioProcessing, onProcessCallbacks, setCalculateThreshold } from '/client/lib/onset-detection';
+import { startAudioProcessing, stopAudioProcessing, onProcessCallbacks, toggleAutoThresholdIsActive } from '/client/lib/onset-detection';
 import { connect } from 'react-redux';
 import actions from '/client/actions/actionCreators';
 import getRandomColor from '/client/lib/helpers';
@@ -11,12 +11,12 @@ const propTypes = {
     toggleSettingsVisibility: PropTypes.func.isRequired,
     setOnsetDetectionRunning: PropTypes.func.isRequired,
     setOnsetData: PropTypes.func.isRequired,
-    autoThreshold: PropTypes.bool.isRequired,
+    autoThresholdIsActive: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
     onsetDetectionIsRunning: state.onsetDetection.isRunning,
-    autoThreshold: state.onsetDetection.autoThreshold,
+    autoThresholdIsActive: state.onsetDetection.autoThresholdIsActive,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -48,8 +48,8 @@ class OnsetDetectionController extends Component {
 
     render() {
         const { onsetDetectionIsRunning, setNewRandomColor, setOnsetDetectionRunning, toggleSettingsVisibility } = this.props;
-        const { autoThreshold } = this.props;
-        setCalculateThreshold(autoThreshold);
+        const { autoThresholdIsActive } = this.props;
+        toggleAutoThresholdIsActive(autoThresholdIsActive);
         if (onsetDetectionIsRunning) startAudioProcessing(setNewRandomColor);
         else stopAudioProcessing();
         return (

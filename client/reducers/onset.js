@@ -3,7 +3,7 @@ import {
     TOGGLE_ONSET_DETECTION_RUNNING,
     SET_ONSET_DATA,
     SET_THRESHOLD,
-    SET_CALCULATE_THRESHOLD,
+    TOGGLE_AUTO_THRESHOLD_IS_ACTIVE,
 } from '/client/actions/actionTypes';
 
 const initialState = {
@@ -13,7 +13,7 @@ const initialState = {
         threshold: 0,
         isPeak: false,
     },
-    autoThreshold: true,
+    autoThresholdIsActive: true,
 };
 
 export default function onsetDetection(state = initialState, action = {}) {
@@ -33,10 +33,10 @@ export default function onsetDetection(state = initialState, action = {}) {
                 ...state,
                 onsetData: action.onsetData,
             };
-        case SET_CALCULATE_THRESHOLD:
+        case TOGGLE_AUTO_THRESHOLD_IS_ACTIVE:
             return {
                 ...state,
-                autoThreshold: action.value,
+                autoThresholdIsActive: !state.autoThresholdIsActive,
             };
         case SET_THRESHOLD:
             return {

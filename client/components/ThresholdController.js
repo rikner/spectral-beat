@@ -1,23 +1,23 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import actions from '/client/actions/actionCreators';
-import Range from '@mapbox/react-range';
+import InputRange from 'react-input-range';
 
 const propTypes = {
     setThreshold: PropTypes.func.isRequired,
-    setCalculateThreshold: PropTypes.func.isRequired,
+    toggleAutoThresholdIsActive: PropTypes.func.isRequired,
     threshold: PropTypes.number.isRequired,
-    autoThreshold: PropTypes.bool.isRequired,
+    autoThresholdIsActive: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
     threshold: state.onsetDetection.onsetData.threshold,
-    autoThreshold: state.onsetDetection.autoThreshold,
+    autoThresholdIsActive: state.onsetDetection.autoThresholdIsActive,
 });
 
 const mapDispatchToProps = {
     setThreshold: actions.setThreshold,
-    setCalculateThreshold: actions.setCalculateThreshold,
+    toggleAutoThresholdIsActive: actions.toggleAutoThresholdIsActive,
 };
 
 class ThresholdController extends Component {
@@ -28,15 +28,16 @@ class ThresholdController extends Component {
     }
 
     toggleCheckboxChange() {
-        this.props.setCalculateThreshold(!this.props.autoThreshold);
+        this.props.toggleAutoThresholdIsActive();
     }
 
-    handleRangeChange() {
-        this.props.setThreshold(this.rangeInput.value);
+    handleRangeChange(value) {
+        console.log(value);
+        this.props.setThreshold(value);
     }
 
     render() {
-        const autoTresholdIsOn = this.props.autoThreshold;
+        const autoTresholdIsOn = this.props.autoThresholdIsActive;
         return (
             <div>
                 <input
@@ -44,15 +45,13 @@ class ThresholdController extends Component {
                     checked={autoTresholdIsOn}
                     onChange={this.toggleCheckboxChange}
                 />
-                <label htmlFor='autoThreshold'>Auto Threshold</label>
-                <Range
-                    ref={(component) => { this.rangeInput = component; }}
-                    className='slider'
+                <label htmlFor='autoThresholdIsActive'>Auto Threshold</label>
+                <InputRange
+                    ref={(component) => { this.inputRange = component; }}
                     onChange={this.handleRangeChange}
-                    type='range'
                     value={this.props.threshold}
-                    min={0}
-                    max={100}
+                    minValue={0}
+                    maxValue={100}
                 />
             </div>
         );

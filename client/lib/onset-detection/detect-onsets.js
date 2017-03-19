@@ -11,7 +11,7 @@ let currentThreshold = 0;
 let currentValue = 0;
 let currentIsPeak = false;
 
-let autoThreshold = true;
+let autoThresholdIsActive = true;
 
 (function () {
     for (let i = 0; i < onsetValues.length; i++) {
@@ -19,25 +19,14 @@ let autoThreshold = true;
     }
 }());
 
-export default detectOnsets = (spectrum, onOnsetDetected = defautOnOnsetDetected) => {
+export default function (spectrum, onOnsetDetected = defautOnOnsetDetected) {
     currentValue = computeSpectralFlux(spectrum);
     onsetValues.shift();
     onsetValues.push(currentValue);
-    if (autoThreshold) currentThreshold = computeThreshold(onsetValues);
+    if (autoThresholdIsActive) currentThreshold = computeThreshold(onsetValues);
     currentIsPeak = checkForRecentPeak(onsetValues, currentThreshold);
     if (currentIsPeak) onOnsetDetected();
-    onAudioProcessed();
-};
 
-export function setThreshold(threshold) {
-    currentThreshold = threshold;
-}
-
-export function setCalculateThreshold(value) {
-    autoThreshold = value;
-}
-
-const onAudioProcessed = () => {
     if (onProcessCallbacks.length) {
         onProcessCallbacks.forEach((onProcess) => {
             onProcess({
@@ -47,7 +36,15 @@ const onAudioProcessed = () => {
             });
         });
     }
-};
+}
+
+export function setThreshold(threshold) {
+    currentThreshold = threshold;
+}
+
+export function toggleAutoThresholdIsActive() {
+    autoThresholdIsActive = !autoThresholdIsActive;
+}
 
 const defautOnOnsetDetected = () => {
     console.log('onset detected');

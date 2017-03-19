@@ -5,7 +5,7 @@ import {
     TOGGLE_ONSET_DETECTION_RUNNING,
     SET_ONSET_DETECTION_RUNNING,
     SET_ONSET_DATA,
-    SET_CALCULATE_THRESHOLD,
+    TOGGLE_AUTO_THRESHOLD_IS_ACTIVE,
     SET_THRESHOLD,
 } from './actionTypes';
 
@@ -42,7 +42,6 @@ export const setThreshold = threshold => ({
     threshold,
 });
 
-export const setCalculateThreshold = value => ({
-    type: SET_CALCULATE_THRESHOLD,
-    value,
+export const toggleAutoThresholdIsActive = () => ({
+    type: TOGGLE_AUTO_THRESHOLD_IS_ACTIVE,
 });
