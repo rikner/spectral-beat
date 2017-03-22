@@ -5,12 +5,9 @@
     "start": "meteor run"
   },
   "dependencies": {
-    "@mapbox/react-range": "0.0.7",
     "meteor-node-stubs": "~0.2.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "react-input-range": "^1.0.2",
-    "react-range": "0.0.7",
     "react-redux": "^5.0.2",
     "redux": "^3.6.0"
   },
