@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import actions from '/client/actions/actionCreators';
-import InputRange from 'react-input-range';
 
 const propTypes = {
     setThreshold: PropTypes.func.isRequired,
@@ -24,35 +23,38 @@ class ThresholdController extends Component {
     constructor() {
         super();
         this.toggleCheckboxChange = this.toggleCheckboxChange.bind(this);
-        this.handleRangeChange = this.handleRangeChange.bind(this);
+        this.handleThresholdChange = this.handleThresholdChange.bind(this);
     }
 
     toggleCheckboxChange() {
         this.props.toggleAutoThresholdIsActive();
     }
 
-    handleRangeChange(value) {
-        console.log(value);
-        this.props.setThreshold(value);
+    handleThresholdChange(event) {
+        this.props.setThreshold(parseFloat(event.target.value));
     }
 
     render() {
-        const autoTresholdIsOn = this.props.autoThresholdIsActive;
+        const { autoThresholdIsActive, threshold } = this.props;
         return (
             <div>
+                <label htmlFor='autoThresholdIsActive'>Auto Threshold</label>
                 <input
                     type='checkbox'
-                    checked={autoTresholdIsOn}
+                    name='autoThresholdIsActive'
+                    checked={autoThresholdIsActive}
                     onChange={this.toggleCheckboxChange}
                 />
-                <label htmlFor='autoThresholdIsActive'>Auto Threshold</label>
-                <InputRange
-                    ref={(component) => { this.inputRange = component; }}
-                    onChange={this.handleRangeChange}
-                    value={this.props.threshold}
-                    minValue={0}
-                    maxValue={100}
-                />
+
+                {!autoThresholdIsActive && <input
+                    type='range'
+                    name='threshold'
+                    onChange={this.handleThresholdChange}
+                    value={threshold}
+                    min={0}
+                    max={10}
+                    step={0.01}
+                />}
             </div>
         );
     }

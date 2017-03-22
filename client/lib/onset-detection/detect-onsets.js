@@ -11,8 +11,6 @@ let currentThreshold = 0;
 let currentValue = 0;
 let currentIsPeak = false;
 
-let autoThresholdIsActive = true;
-
 (function () {
     for (let i = 0; i < onsetValues.length; i++) {
         onsetValues[i] = 0;
@@ -23,7 +21,7 @@ export default function (spectrum, onOnsetDetected = defautOnOnsetDetected) {
     currentValue = computeSpectralFlux(spectrum);
     onsetValues.shift();
     onsetValues.push(currentValue);
-    if (autoThresholdIsActive) currentThreshold = computeThreshold(onsetValues);
+    currentThreshold = computeThreshold(onsetValues);
     currentIsPeak = checkForRecentPeak(onsetValues, currentThreshold);
     if (currentIsPeak) onOnsetDetected();
 
@@ -31,8 +29,8 @@ export default function (spectrum, onOnsetDetected = defautOnOnsetDetected) {
         onProcessCallbacks.forEach((onProcess) => {
             onProcess({
                 value: onsetValues[onsetValues.length - 1],
-                threshold: currentThreshold,
                 isPeak: currentIsPeak,
+                threshold: currentThreshold,
             });
         });
     }
@@ -40,10 +38,6 @@ export default function (spectrum, onOnsetDetected = defautOnOnsetDetected) {
 
 export function setThreshold(threshold) {
     currentThreshold = threshold;
-}
-
-export function toggleAutoThresholdIsActive() {
-    autoThresholdIsActive = !autoThresholdIsActive;
 }
 
 const defautOnOnsetDetected = () => {

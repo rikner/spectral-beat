@@ -31,7 +31,10 @@ export default function onsetDetection(state = initialState, action = {}) {
         case SET_ONSET_DATA:
             return {
                 ...state,
-                onsetData: action.onsetData,
+                onsetData: {
+                    ...state.onsetData,
+                    ...action.onsetData,
+                },
             };
         case TOGGLE_AUTO_THRESHOLD_IS_ACTIVE:
             return {

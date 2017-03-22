@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import { startAudioProcessing, stopAudioProcessing, onProcessCallbacks, toggleAutoThresholdIsActive } from '/client/lib/onset-detection';
+import { startAudioProcessing, stopAudioProcessing, onProcessCallbacks } from '/client/lib/onset-detection';
 import { connect } from 'react-redux';
 import actions from '/client/actions/actionCreators';
 import getRandomColor from '/client/lib/helpers';
@@ -42,16 +42,24 @@ class OnsetDetectionController extends Component {
 
     componentDidMount() {
         onProcessCallbacks.push((onsetData) => {
-            this.props.setOnsetData(onsetData);
+            const { autoThresholdIsActive, setOnsetData } = this.props;
+            if (autoThresholdIsActive) {
+                setOnsetData(onsetData);
+            } else {
+                setOnsetData({ isPeak: onsetData.isPeak, value: onsetData.value });
+            }
         });
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.onsetDetectionIsRunning !== this.props.onsetDetectionIsRunning) {
+            if (nextProps.onsetDetectionIsRunning) startAudioProcessing(this.props.setNewRandomColor);
+            else stopAudioProcessing();
+        }
+    }
+
     render() {
-        const { onsetDetectionIsRunning, setNewRandomColor, setOnsetDetectionRunning, toggleSettingsVisibility } = this.props;
-        const { autoThresholdIsActive } = this.props;
-        toggleAutoThresholdIsActive(autoThresholdIsActive);
-        if (onsetDetectionIsRunning) startAudioProcessing(setNewRandomColor);
-        else stopAudioProcessing();
+        const { setOnsetDetectionRunning, toggleSettingsVisibility } = this.props;
         return (
             <ControlPanel
                 onClickStart={() => { setOnsetDetectionRunning(true); }}
