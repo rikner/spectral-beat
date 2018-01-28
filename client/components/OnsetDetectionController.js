@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import { startAudioProcessing, stopAudioProcessing, onProcessCallbacks } from '/client/lib/onset-detection';
+import OnsetDetection from '/client/lib/OnsetDetection';
 import { connect } from 'react-redux';
 import actions from '/client/actions/actionCreators';
 import getRandomColor from '/client/lib/helpers';
@@ -39,9 +39,13 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class OnsetDetectionController extends Component {
+    constructor() {
+        super();
+        this.onsetDetection = new OnsetDetection();
+    }
 
     componentDidMount() {
-        onProcessCallbacks.push((onsetData) => {
+        this.onsetDetection.onProcessCallbacks.push((onsetData) => {
             const { autoThresholdIsActive, setOnsetData } = this.props;
             if (autoThresholdIsActive) {
                 setOnsetData(onsetData);
@@ -53,8 +57,11 @@ class OnsetDetectionController extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.onsetDetectionIsRunning !== this.props.onsetDetectionIsRunning) {
-            if (nextProps.onsetDetectionIsRunning) startAudioProcessing(this.props.setNewRandomColor);
-            else stopAudioProcessing();
+            if (nextProps.onsetDetectionIsRunning) {
+                this.onsetDetection.startAudioProcessing(this.props.setNewRandomColor);
+            } else {
+                this.onsetDetection.stopAudioProcessing();
+            }
         }
     }
 
