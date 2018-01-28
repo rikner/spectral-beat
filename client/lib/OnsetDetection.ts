@@ -19,7 +19,7 @@ class OnsetDetection {
     public onProcessCallbacks: Array< (object)=>void > = [];
     public onOnsetDetected: () => void;
 
-    private run(spectrum: Uint8Array) {
+    private run = (spectrum: Uint8Array) => {
         this.currentValue = computeSpectralFlux(this.previousSpectrum, spectrum);
         this.onsetValues.shift();
         this.onsetValues.push(this.currentValue);

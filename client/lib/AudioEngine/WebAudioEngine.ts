@@ -14,11 +14,10 @@ class WebAudioEngine {
         this.byteFrequencyData = new Uint8Array(bufferSize / 2);
     }
 
-    private audioProcessingCallback(/*audioProcessingEvent*/) {
-        if (this.onByteFrequencyData) {
-            this.analyserNode.getByteFrequencyData(this.byteFrequencyData);
-            this.onByteFrequencyData(this.byteFrequencyData)
-        }
+    private audioProcessingCallback = (/*audioProcessingEvent*/) => {
+        if (!this.onByteFrequencyData) return;
+        this.analyserNode.getByteFrequencyData(this.byteFrequencyData);
+        this.onByteFrequencyData(this.byteFrequencyData);
     }
 
     static async getMicrophoneMediaStream(): Promise<MediaStream> {
