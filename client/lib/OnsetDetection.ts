@@ -1,28 +1,44 @@
 import WebAudioEngine from './AudioEngine/WebAudioEngine';
 
+type OnProcessData = {
+    value: number,
+    isPeak: boolean,
+    threshold: number,
+}
+
 class OnsetDetection {
-    public static settings = {
-        inputBinCount: 512
-    }
+    
+    static inputBinCount: number = 512
 
     private audioEngine: WebAudioEngine = new WebAudioEngine(
-        OnsetDetection.settings.inputBinCount * 2 // bufferSize
+        OnsetDetection.inputBinCount * 2 // bufferSize
     );
 
     private currentValue = 0;
     private currentThreshold = 0;
     private currentIsPeak = false;
 
-    private previousSpectrum = new Uint8Array(OnsetDetection.settings.inputBinCount);
-    private onsetValues = new Array(50);
+    private previousSpectrum = new Uint8Array(OnsetDetection.inputBinCount);
+    private onsetValues: Array<number>;
 
-    public onProcessCallbacks: Array< (object)=>void > = [];
-    public onOnsetDetected: () => void;
+    public onProcessCallbacks: Array<(data: OnProcessData)=>void > = [];
+    public onOnsetDetected: () => void = ()=>{}
+
+    constructor(){
+        this.onsetValues = new Array(50);
+        for (let i = 0; i < this.onsetValues.length; i++) {
+           this.onsetValues[i] = 0;
+        }
+    }
 
     private run = (spectrum: Uint8Array) => {
+        // console.log(this.previousSpectrum);
+        // console.log(spectrum);
         this.currentValue = computeSpectralFlux(this.previousSpectrum, spectrum);
+        this.previousSpectrum.set(spectrum)
         this.onsetValues.shift();
         this.onsetValues.push(this.currentValue);
+        console.log(this.onsetValues);
         this.currentThreshold = computeThreshold(this.onsetValues);
 
         const currentIsPeak = checkForRecentPeak(this.onsetValues, this.currentThreshold);
@@ -61,7 +77,6 @@ const computeSpectralFlux = (previousSpectrum: Uint8Array, spectrum: Uint8Array)
 
     flux = Math.sqrt(flux);
     flux /= (spectrum.length);
-    previousSpectrum.set(spectrum.subarray(0));
     return flux;
 };
 
@@ -69,13 +84,13 @@ const defautOnOnsetDetected = () => {
     console.log('onset detected');
 };
 
-const computeThreshold = (arr) => {
+const computeThreshold = (arr: Array<number>) => {
     const meanValue = mean(arr);
     const medianValue = median(arr);
     return Math.max(meanValue + (2 * medianValue));
 };
 
-const checkForRecentPeak = (arr, threshold) => {
+const checkForRecentPeak = (arr: Array<number>, threshold: number) => {
     const isLocalMaximum = (arr[arr.length - 3] < arr[arr.length - 2]) && (arr[arr.length - 2] > arr[arr.length - 1]);
     const isAboveThreshold = (arr[arr.length - 2] > threshold);
     return isLocalMaximum && isAboveThreshold;
@@ -87,8 +102,6 @@ const mean = (numArray) => {
 };
 
 const median = (numArray) => {
-    // always remember to hard copy the array when flashSorting
-    // console.warn("remember to check result of sortedNumArray");
     const sortedNumArray = numArray.slice().sort((a, b) => a - b);
     const half = Math.floor(sortedNumArray.length / 2);
 
