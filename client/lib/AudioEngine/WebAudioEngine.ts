@@ -8,7 +8,7 @@ class WebAudioEngine {
     private micStream: MediaStream;
 
     private byteFrequencyData: Uint8Array;
-    public onByteFrequencyData: (Uint8Array) => void;
+    public onByteFrequencyData: (arr: Uint8Array) => void;
 
     constructor(bufferSize: number) {
         this.byteFrequencyData = new Uint8Array(bufferSize / 2);
