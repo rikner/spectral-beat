@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import ControlButton from '/client/components/Button';
+import ControlButton from './Button';
 
 const propTypes = {
     onClickStart: PropTypes.func.isRequired,
