@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 const w = 512;
 const h = 600;
-const onsetScale = 100;
+const onsetScale = 1000;
 
 const onsetValues = new Array(w);
 const thresholdValues = new Array(w);
@@ -39,9 +39,14 @@ class OnsetGraph extends Component {
     }
 
     updateCanvas(onsetData) {
-        onsetValues.shift(); onsetValues.push(onsetData.value);
-        thresholdValues.shift(); thresholdValues.push(onsetData.threshold);
-        peakValues.shift(); peakValues.push(onsetData.isPeak);
+        onsetValues.shift();
+        onsetValues.push(onsetData.value);
+        
+        thresholdValues.shift();
+        thresholdValues.push(onsetData.threshold);
+        
+        peakValues.shift();
+        peakValues.push(onsetData.isPeak);
 
         const onsetCanvasCtx = this.canvas.getContext('2d');
         onsetCanvasCtx.fillStyle = 'black';
@@ -54,8 +59,6 @@ class OnsetGraph extends Component {
             }
         }
 
-
-
         onsetCanvasCtx.fillStyle = 'blue';
         for (let i = 0; i < thresholdValues.length; i++) {
             onsetCanvasCtx.fillRect(i, h, 1, -thresholdValues[i] * onsetScale);
@@ -66,26 +69,6 @@ class OnsetGraph extends Component {
             onsetCanvasCtx.fillRect(i, h, 1, -onsetValues[i] * onsetScale);
         }
     }
-
-    // updateCanvas(onsetData) {
-    //     const onsetCanvasCtx = this.canvas.getContext('2d');
-    //     onsetCanvasCtx.fillStyle = 'black';
-    //     onsetCanvasCtx.fillRect(0, 0, w, h);
-
-    //     onsetCanvasCtx.fillStyle = 'white';
-    //     for (let i = 0; i < onsetData.length; i++) {
-    //         onsetCanvasCtx.fillRect(i * 2, h, 1, -onsetData[i] * onsetScale);
-    //     }
-
-    //     // threshold
-    //     const threshold = 1;
-    //     for (let i = 0; i < onsetData.length; i++) {
-    //         onsetCanvasCtx.fillStyle = 'rgba(255, 83, 13, 1)';
-    //         onsetCanvasCtx.fillRect(i * 2, h - threshold * onsetScale, 2, 1);
-    //         onsetCanvasCtx.fillStyle = 'rgba(255, 83, 13, 0.5)';
-    //         onsetCanvasCtx.fillRect(i * 2, h, 1, -threshold * onsetScale);
-    //     }
-    // }
 
     render() {
         return (
