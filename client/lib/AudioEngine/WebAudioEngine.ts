@@ -10,18 +10,17 @@ class WebAudioEngine {
     private byteFrequencyData: Uint8Array;
     public onByteFrequencyData: (arr: Uint8Array) => void;
 
-    constructor(bufferSize: number) {
+    constructor({ bufferSize: bufferSize }) {
         this.byteFrequencyData = new Uint8Array(bufferSize / 2);
     }
 
-    private audioProcessingCallback = (/*audioProcessingEvent*/) => {
+    private audioProcessingCallback = (audioProcessingEvent: AudioProcessingEvent) => {
         if (!this.onByteFrequencyData) return;
         this.analyserNode.getByteFrequencyData(this.byteFrequencyData);
         this.onByteFrequencyData(this.byteFrequencyData);
     }
 
     static async getMicrophoneMediaStream(): Promise<MediaStream> {
-        // if (!hasGetUserMedia()) onMicrophoneFail('no getUserMedia available');
         return navigator.mediaDevices.getUserMedia({ audio: true });
     }
 

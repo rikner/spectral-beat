@@ -1,6 +1,6 @@
 import WebAudioEngine from './AudioEngine/WebAudioEngine';
 
-type OnProcessData = {
+type OnsetResultData = {
     value: number,
     isPeak: boolean,
     threshold: number,
@@ -10,14 +10,14 @@ class OnsetDetection {
 
     static inputBinCount: number = 512
 
-    private audioEngine: WebAudioEngine = new WebAudioEngine(
-        OnsetDetection.inputBinCount * 2 // bufferSize
-    );
+    private audioEngine = new WebAudioEngine({
+        bufferSize: OnsetDetection.inputBinCount * 2 // bufferSize
+    });
     
     private previousSpectrum = new Uint8Array(OnsetDetection.inputBinCount);
     private onsetValues: Array<number>;
 
-    public onProcessCallbacks: Array<(data: OnProcessData) => void> = [];
+    public onProcessCallbacks: Array<(data: OnsetResultData) => void> = [];
     public onOnsetDetected: () => void = () => { }
 
     constructor() {
@@ -28,9 +28,12 @@ class OnsetDetection {
     }
 
     private run = (spectrum: Uint8Array) => {
-        // console.log(this.previousSpectrum);
-        // console.log(spectrum);
-        const flux = computeSpectralFlux(this.previousSpectrum, spectrum);
+        if (spectrum.length !== this.previousSpectrum.length) {
+            console.error("previous and current spectrum don't have the same length");
+            return
+        }
+
+        const flux = computeSpectralFlux(this.previousSpectrum, spectrum.subarray(0));
         this.previousSpectrum.set(spectrum.subarray(0))
         this.onsetValues.shift();
         this.onsetValues.push(flux);
