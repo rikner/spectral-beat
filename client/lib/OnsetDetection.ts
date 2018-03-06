@@ -7,54 +7,49 @@ type OnProcessData = {
 }
 
 class OnsetDetection {
-    
+
     static inputBinCount: number = 512
 
     private audioEngine: WebAudioEngine = new WebAudioEngine(
         OnsetDetection.inputBinCount * 2 // bufferSize
     );
-
-    private currentValue = 0;
-    private currentThreshold = 0;
-    private currentIsPeak = false;
-
+    
     private previousSpectrum = new Uint8Array(OnsetDetection.inputBinCount);
     private onsetValues: Array<number>;
 
-    public onProcessCallbacks: Array<(data: OnProcessData)=>void > = [];
-    public onOnsetDetected: () => void = ()=>{}
+    public onProcessCallbacks: Array<(data: OnProcessData) => void> = [];
+    public onOnsetDetected: () => void = () => { }
 
-    constructor(){
+    constructor() {
         this.onsetValues = new Array(50);
         for (let i = 0; i < this.onsetValues.length; i++) {
-           this.onsetValues[i] = 0;
+            this.onsetValues[i] = 0;
         }
     }
 
     private run = (spectrum: Uint8Array) => {
         // console.log(this.previousSpectrum);
         // console.log(spectrum);
-        this.currentValue = computeSpectralFlux(this.previousSpectrum, spectrum);
-        this.previousSpectrum.set(spectrum)
+        const flux = computeSpectralFlux(this.previousSpectrum, spectrum);
+        this.previousSpectrum.set(spectrum.subarray(0))
         this.onsetValues.shift();
-        this.onsetValues.push(this.currentValue);
-        console.log(this.onsetValues);
-        this.currentThreshold = computeThreshold(this.onsetValues);
+        this.onsetValues.push(flux);
+        // console.log(this.onsetValues);
+        const threshold = computeThreshold(this.onsetValues.slice());
 
-        const currentIsPeak = checkForRecentPeak(this.onsetValues, this.currentThreshold);
+        const currentIsPeak = checkForRecentPeak(this.onsetValues.slice(), threshold);
         if (currentIsPeak) {
             console.log("onset detected")
             this.onOnsetDetected();
-        }   
-        if (this.onProcessCallbacks.length) {
-            this.onProcessCallbacks.forEach((onProcess) => {
-                onProcess({
-                    value: this.onsetValues[this.onsetValues.length - 1],
-                    isPeak: currentIsPeak,
-                    threshold: this.currentThreshold,
-                });
-            });
         }
+
+        this.onProcessCallbacks.forEach((onProcess) => {
+            onProcess({
+                value: this.onsetValues[this.onsetValues.length - 1],
+                isPeak: currentIsPeak,
+                threshold: threshold,
+            });
+        });
     }
 
     public startAudioProcessing() {
@@ -62,7 +57,7 @@ class OnsetDetection {
         this.audioEngine.start();
     }
 
-    public stopAudioProcessing(): void {
+    public stopAudioProcessing() {
         this.audioEngine.stop();
     }
 }
