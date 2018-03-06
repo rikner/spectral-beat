@@ -6,18 +6,18 @@ class WebAudioEngine {
     private processingNode: ScriptProcessorNode;
     private gainNode: GainNode;
     private micStream: MediaStream;
+    private bufferSize: number;
 
-    private byteFrequencyData: Uint8Array;
     public onByteFrequencyData: (arr: Uint8Array) => void;
 
     constructor({ bufferSize: bufferSize }) {
-        this.byteFrequencyData = new Uint8Array(bufferSize / 2);
+        this.bufferSize = bufferSize;
     }
 
     private audioProcessingCallback = (audioProcessingEvent: AudioProcessingEvent) => {
-        if (!this.onByteFrequencyData) return;
-        this.analyserNode.getByteFrequencyData(this.byteFrequencyData);
-        this.onByteFrequencyData(this.byteFrequencyData);
+        const byteFrequencyData = new Uint8Array(512);
+        this.analyserNode.getByteTimeDomainData(byteFrequencyData);
+        this.onByteFrequencyData(byteFrequencyData);
     }
 
     static async getMicrophoneMediaStream(): Promise<MediaStream> {
@@ -34,11 +34,10 @@ class WebAudioEngine {
 
         // fft
         this.analyserNode = ctx.createAnalyser();
-        this.analyserNode.fftSize = this.byteFrequencyData.length;
+        this.analyserNode.fftSize = this.bufferSize / 2;
 
         // processing
-        const bufferSize = this.byteFrequencyData.length * 2
-        this.processingNode = ctx.createScriptProcessor(bufferSize, 1, 1);
+        this.processingNode = ctx.createScriptProcessor(this.bufferSize, 1, 1);
         this.processingNode.onaudioprocess = this.audioProcessingCallback;
 
         // gain
