@@ -34,7 +34,7 @@ class OnsetDetection {
         }
 
         const flux = computeSpectralFlux(this.previousSpectrum, spectrum.subarray(0));
-        this.previousSpectrum.set(spectrum.subarray(0))
+        this.previousSpectrum.set(spectrum);
         this.onsetValues.shift();
         this.onsetValues.push(flux);
         // console.log(this.onsetValues);
