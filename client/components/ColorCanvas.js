@@ -8,7 +8,9 @@ const ColorCanvas = ({ currentColor }) => (
             backgroundColor: currentColor,
             height: '100%',
             width: '100%',
-            position: 'fixed',
+            position: 'absolute',
+            left: 0,
+            top: 0
         }}
     />
 );
