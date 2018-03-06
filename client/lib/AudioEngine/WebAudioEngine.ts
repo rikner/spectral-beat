@@ -1,5 +1,5 @@
 class WebAudioEngine {
-    private audioContext: AudioContext = new AudioContext();
+    private audioContext: AudioContext
 
     private inputNode: MediaStreamAudioSourceNode;
     private analyserNode: AnalyserNode;
@@ -11,6 +11,9 @@ class WebAudioEngine {
     public onByteFrequencyData: (arr: Uint8Array) => void;
 
     constructor({ bufferSize: bufferSize }) {
+        let AudioContext = window.AudioContext || window.webkitAudioContext;
+        this.audioContext = new AudioContext();
+        
         this.bufferSize = bufferSize;
     }
 
