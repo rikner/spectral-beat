@@ -1,7 +1,13 @@
 {
     "compilerOptions": {
+        "allowJs": true,
         "target": "esnext",
         "module": "es6",
-        "sourceMap": true
+        "sourceMap": true,
+        "lib": [
+            "es2015",
+            "dom",
+            "es2015.promise"
+        ]
     }
 }
