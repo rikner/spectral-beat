@@ -15,7 +15,7 @@ class WebAudioEngine {
     }
 
     private audioProcessingCallback = (audioProcessingEvent: AudioProcessingEvent) => {
-        const byteFrequencyData = new Uint8Array(512);
+        const byteFrequencyData = new Uint8Array(this.bufferSize / 2);
         this.analyserNode.getByteTimeDomainData(byteFrequencyData);
         this.onByteFrequencyData(byteFrequencyData);
     }
