@@ -34,7 +34,7 @@ class WebAudioEngine {
 
         // gain
         this.gainNode = this.audioContext.createGain();
-        this.gainNode.gain.value = 0;
+        this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime + 1);
     }
 
     private audioProcessingCallback = (audioProcessingEvent: AudioProcessingEvent) => {
