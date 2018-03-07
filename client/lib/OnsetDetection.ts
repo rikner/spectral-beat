@@ -10,9 +10,7 @@ class OnsetDetection {
 
     static inputBinCount: number = 512
 
-    private audioEngine = new WebAudioEngine({
-        bufferSize: OnsetDetection.inputBinCount * 2 // bufferSize
-    });
+    private audioEngine = new WebAudioEngine(OnsetDetection.inputBinCount * 2);
     
     private previousSpectrum = new Uint8Array(OnsetDetection.inputBinCount);
     private onsetValues: Array<number>;
@@ -94,12 +92,12 @@ const checkForRecentPeak = (arr: Array<number>, threshold: number) => {
     return isLocalMaximum && isAboveThreshold;
 };
 
-const mean = (numArray) => {
+const mean = (numArray: Array<number>) => {
     const sum = numArray.reduce((a, b) => a + b, 0);
     return sum / numArray.length;
 };
 
-const median = (numArray) => {
+const median = (numArray: Array<number>) => {
     const sortedNumArray = numArray.slice().sort((a, b) => a - b);
     const half = Math.floor(sortedNumArray.length / 2);
 
