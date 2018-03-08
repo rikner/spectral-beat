@@ -4,6 +4,7 @@ class WebAudioEngine {
     private inputNode: MediaStreamAudioSourceNode | null = null;
     private micStream: MediaStream | null = null;
     
+    private filterNode: BiquadFilterNode;
     private analyserNode: AnalyserNode;
     private processingNode: ScriptProcessorNode;
     private gainNode: GainNode;
@@ -24,6 +25,11 @@ class WebAudioEngine {
             console.error(reason)
         })
 
+        // filter
+        this.filterNode = this.audioContext.createBiquadFilter()
+        this.filterNode.type = "lowpass"
+        this.filterNode.frequency.setValueAtTime(1000, 0);
+
         // fft
         this.analyserNode = this.audioContext.createAnalyser();
         this.analyserNode.fftSize = this.bufferSize / 2;
@@ -43,15 +49,19 @@ class WebAudioEngine {
         this.onByteFrequencyData(byteFrequencyData);
     }
 
-    public async start(): Promise<void> {
-        this.inputNode && this.inputNode.connect(this.analyserNode);
-        this.analyserNode.connect(this.processingNode);
-        this.processingNode.connect(this.gainNode);
-        this.gainNode.connect(this.audioContext.destination);
+    public start(): void {
+        if (this.inputNode == null) return;
+        this.inputNode
+        .connect(this.filterNode)
+        .connect(this.analyserNode)
+        .connect(this.processingNode)
+        .connect(this.gainNode)
+        .connect(this.audioContext.destination);
     }
 
     public stop(): void {
         this.inputNode && this.inputNode.disconnect();
+        this.filterNode.disconnect();
         this.analyserNode.disconnect();
         this.processingNode.disconnect();
         this.gainNode.disconnect();
