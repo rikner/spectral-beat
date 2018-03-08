@@ -19,7 +19,7 @@ class OnsetDetection {
     public onOnsetDetected: () => void = () => { }
 
     constructor() {
-        this.onsetValues = new Array(50);
+        this.onsetValues = new Array(100);
         for (let i = 0; i < this.onsetValues.length; i++) {
             this.onsetValues[i] = 0;
         }
@@ -83,7 +83,7 @@ const defautOnOnsetDetected = () => {
 const computeThreshold = (arr: Array<number>) => {
     const meanValue = mean(arr);
     const medianValue = median(arr);
-    return Math.max(meanValue + (2 * medianValue));
+    return meanValue + medianValue;
 };
 
 const checkForRecentPeak = (arr: Array<number>, threshold: number) => {
