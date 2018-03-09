@@ -14,6 +14,8 @@ class OnsetDetection {
     
     private previousSpectrum = new Uint8Array(OnsetDetection.inputBinCount);
     private onsetValues: Array<number>;
+    private shouldCalculateThreshold: boolean = true;
+    private threshold: number = 0;
 
     public onProcessCallbacks: Array<(data: OnsetResultData) => void> = [];
     public onOnsetDetected: () => void = () => { }
@@ -25,6 +27,17 @@ class OnsetDetection {
         }
     }
 
+    
+    public setThreshold(value : number | null) {
+        if (value != null) {
+            this.threshold = value;
+            this.shouldCalculateThreshold = false;
+        } else {
+            this.shouldCalculateThreshold = true;
+        }
+    }
+    
+
     private run = (spectrum: Uint8Array) => {
         if (spectrum.length !== this.previousSpectrum.length) {
             console.error("previous and current spectrum don't have the same length");
@@ -35,10 +48,11 @@ class OnsetDetection {
         this.previousSpectrum.set(spectrum);
         this.onsetValues.shift();
         this.onsetValues.push(flux);
-        // console.log(this.onsetValues);
-        const threshold = computeThreshold(this.onsetValues.slice());
 
-        const currentIsPeak = checkForRecentPeak(this.onsetValues.slice(), threshold);
+        if (this.shouldCalculateThreshold) 
+            this.threshold = calculateThreshold(this.onsetValues.slice());
+
+        const currentIsPeak = checkForRecentPeak(this.onsetValues.slice(), this.threshold);
         if (currentIsPeak) {
             console.log("onset detected")
             this.onOnsetDetected();
@@ -48,7 +62,7 @@ class OnsetDetection {
             onProcess({
                 value: this.onsetValues[this.onsetValues.length - 1],
                 isPeak: currentIsPeak,
-                threshold: threshold,
+                threshold: this.threshold,
             });
         });
     }
@@ -80,7 +94,7 @@ const defautOnOnsetDetected = () => {
     console.log('onset detected');
 };
 
-const computeThreshold = (arr: Array<number>) => {
+const calculateThreshold = (arr: Array<number>): number => {
     const meanValue = mean(arr);
     const medianValue = median(arr);
     return meanValue + medianValue;

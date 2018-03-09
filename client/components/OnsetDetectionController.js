@@ -18,6 +18,7 @@ const propTypes = {
 const mapStateToProps = state => ({
     onsetDetectionIsRunning: state.onsetDetection.isRunning,
     autoThresholdIsActive: state.onsetDetection.autoThresholdIsActive,
+    userThreshold: state.onsetDetection.userThreshold,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -48,12 +49,7 @@ class OnsetDetectionController extends Component {
     componentDidMount() {
         this.onsetDetection.onOnsetDetected = this.props.setNewRandomColor;
         this.onsetDetection.onProcessCallbacks.push((onsetData) => {
-            const { autoThresholdIsActive, setOnsetData } = this.props;
-            if (autoThresholdIsActive) {
-                setOnsetData(onsetData);
-            } else {
-                setOnsetData({ isPeak: onsetData.isPeak, value: onsetData.value });
-            }
+            this.props.setOnsetData(onsetData);
         });
     }
 
@@ -64,6 +60,14 @@ class OnsetDetectionController extends Component {
             } else {
                 this.onsetDetection.stopAudioProcessing();
             }
+        }
+        if (nextProps.autoThresholdIsActive !== this.props.autoThresholdIsActive) {
+            this.onsetDetection.shouldCalculateThreshold = nextProps.autoThresholdIsActive;
+        }
+
+        if (nextProps.userThreshold !== this.props.userThreshold) {
+            console.log("setting onset detection user threshold");
+            this.onsetDetection.setThreshold(nextProps.userThreshold);
         }
     }
 

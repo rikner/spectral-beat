@@ -3,19 +3,19 @@ import { connect } from 'react-redux';
 import actions from '/client/actions/actionCreators';
 
 const propTypes = {
-    setThreshold: PropTypes.func.isRequired,
+    setUserThreshold: PropTypes.func.isRequired,
     toggleAutoThresholdIsActive: PropTypes.func.isRequired,
-    threshold: PropTypes.number.isRequired,
+    userThreshold: PropTypes.number.isRequired,
     autoThresholdIsActive: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
-    threshold: state.onsetDetection.onsetData.threshold,
+    userThreshold: state.onsetDetection.userThreshold,
     autoThresholdIsActive: state.onsetDetection.autoThresholdIsActive,
 });
 
 const mapDispatchToProps = {
-    setThreshold: actions.setThreshold,
+    setUserThreshold: actions.setThreshold,
     toggleAutoThresholdIsActive: actions.toggleAutoThresholdIsActive,
 };
 
@@ -31,11 +31,11 @@ class ThresholdController extends Component {
     }
 
     handleThresholdChange(event) {
-        this.props.setThreshold(parseFloat(event.target.value));
+        this.props.setUserThreshold(parseFloat(event.target.value));
     }
 
     render() {
-        const { autoThresholdIsActive, threshold } = this.props;
+        const { autoThresholdIsActive, userThreshold } = this.props;
         return (
             <div>
                 <label htmlFor='autoThresholdIsActive'>Auto Threshold</label>
@@ -50,11 +50,12 @@ class ThresholdController extends Component {
                     type='range'
                     name='threshold'
                     onChange={this.handleThresholdChange}
-                    value={threshold}
+                    // value={threshold}
                     min={0}
-                    max={10}
-                    step={0.01}
+                    max={2.5}
+                    step={0.001}
                 />}
+                 <label>{userThreshold}</label>
             </div>
         );
     }

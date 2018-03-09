@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 const w = 512;
 const h = 600;
-const onsetScale = 1000;
+const onsetScale = 100;
 
 const onsetValues = new Array(w);
 const thresholdValues = new Array(w);

@@ -13,6 +13,7 @@ const initialState = {
         threshold: 0,
         isPeak: false,
     },
+    userThreshold: 0,
     autoThresholdIsActive: true,
 };
 
@@ -44,10 +45,7 @@ export default function onsetDetection(state = initialState, action = {}) {
         case SET_THRESHOLD:
             return {
                 ...state,
-                onsetData: {
-                    ...state.onsetData,
-                    threshold: action.threshold,
-                },
+                userThreshold: action.threshold
             };
         default:
             return state;
