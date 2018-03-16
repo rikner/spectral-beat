@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
         "strict": true,
-        // "allowJs": true,
-        "target": "esnext",
-        "module": "es6",
+        "allowJs": true,
+        "target": "es5",
+        "module": "commonjs",
         "sourceMap": true,
         "lib": [
             "es2015",
