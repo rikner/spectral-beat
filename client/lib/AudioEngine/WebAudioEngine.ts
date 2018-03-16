@@ -10,9 +10,9 @@ class WebAudioEngine {
     private gainNode: GainNode;
     private bufferSize: number;
 
-    public onByteFrequencyData = (arr: Uint8Array) => {};
+    public onFloatTimeDomainData = (arr: Float32Array) => {};
 
-    constructor(bufferSize: number) {
+    constructor({ bufferSize }: { bufferSize: number }) { 
         let AudioContext = (<any>window).AudioContext || (<any>window).webkitAudioContext;
         this.audioContext = new AudioContext();
         this.bufferSize = bufferSize;
@@ -44,9 +44,9 @@ class WebAudioEngine {
     }
 
     private audioProcessingCallback = (audioProcessingEvent: AudioProcessingEvent) => {
-        const byteFrequencyData = new Uint8Array(this.bufferSize / 2);
-        this.analyserNode.getByteTimeDomainData(byteFrequencyData);
-        this.onByteFrequencyData(byteFrequencyData);
+        const floatTimeDomainData = new Float32Array(this.bufferSize); 
+        this.analyserNode.getFloatTimeDomainData(floatTimeDomainData); 
+        this.onFloatTimeDomainData(floatTimeDomainData); 
     }
 
     public start(): void {

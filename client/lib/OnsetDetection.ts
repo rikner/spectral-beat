@@ -1,4 +1,5 @@
 import WebAudioEngine from './AudioEngine/WebAudioEngine';
+import Meyda from 'meyda';
 
 type OnsetResultData = {
     value: number,
@@ -8,11 +9,10 @@ type OnsetResultData = {
 
 class OnsetDetection {
 
-    static inputBinCount: number = 512
+    static readonly bufferSize: number = 1024;
 
-    private audioEngine = new WebAudioEngine(OnsetDetection.inputBinCount * 2);
+    private audioEngine = new WebAudioEngine({ bufferSize: OnsetDetection.bufferSize }); 
     
-    private previousSpectrum = new Uint8Array(OnsetDetection.inputBinCount);
     private onsetValues: Array<number>;
     private shouldCalculateThreshold: boolean = true;
     private threshold: number = 0;
@@ -25,6 +25,7 @@ class OnsetDetection {
         for (let i = 0; i < this.onsetValues.length; i++) {
             this.onsetValues[i] = 0;
         }
+
     }
 
     
@@ -38,14 +39,9 @@ class OnsetDetection {
     }
     
 
-    private run = (spectrum: Uint8Array) => {
-        if (spectrum.length !== this.previousSpectrum.length) {
-            console.error("previous and current spectrum don't have the same length");
-            return
-        }
+    private run = (signal: Float32Array) => {
+        const flux = Meyda.extract("spectralFlux", signal);
 
-        const flux = computeSpectralFlux(this.previousSpectrum, spectrum.subarray(0));
-        this.previousSpectrum.set(spectrum);
         this.onsetValues.shift();
         this.onsetValues.push(flux);
 
@@ -68,7 +64,8 @@ class OnsetDetection {
     }
 
     public startAudioProcessing() {
-        this.audioEngine.onByteFrequencyData = this.run;
+        Meyda.bufferSize = OnsetDetection.bufferSize; 
+        this.audioEngine.onFloatTimeDomainData = this.run;
         this.audioEngine.start();
     }
 
