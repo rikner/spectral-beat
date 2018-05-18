@@ -63,23 +63,18 @@ class OnsetGraph extends Component {
     }
 
     startLoop() {
-        if (!this._frameId) {
-            this._frameId = window.requestAnimationFrame(this.loop);
+        if (!this.frameId) {
+            this.frameId = window.requestAnimationFrame(this.loop);
         }
     }
 
     loop() {
-        // perform loop work here
         this.drawCanvas()
-
-        // Set up next iteration of the loop
         this.frameId = window.requestAnimationFrame(this.loop)
     }
 
     stopLoop() {
-        window.cancelAnimationFrame(this._frameId);
-        // Note: no need to worry if the loop has already been cancelled
-        // cancelAnimationFrame() won't throw an error
+        window.cancelAnimationFrame(this.frameId);
     }
 
 
