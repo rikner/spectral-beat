@@ -9,6 +9,18 @@ const onsetValues = new Array(w);
 const thresholdValues = new Array(w);
 const peakValues = new Array(w);
 
+
+function updateCanvas(onsetData) {
+    onsetValues.shift();
+    onsetValues.push(onsetData.value);
+
+    thresholdValues.shift();
+    thresholdValues.push(onsetData.threshold);
+
+    peakValues.shift();
+    peakValues.push(onsetData.isPeak);
+}
+
 (function () {
     for (let i = 0; i < w; i++) {
         onsetValues[i] = 0;
@@ -30,24 +42,43 @@ const mapStateToProps = state => ({
 });
 
 class OnsetGraph extends Component {
+
+    constructor() {
+        super();
+        this.loop = this.loop.bind(this);
+        this.drawCanvas = this.drawCanvas.bind(this);
+    }
+
     componentDidMount() {
-        this.updateCanvas([]);
+        this.startLoop();
+
+    }
+
+    componentWillUnmount() {
+        this.stopLoop();
     }
 
     componentWillUpdate(nextProps) {
-        this.updateCanvas(nextProps.onsetData);
+        updateCanvas(nextProps.onsetData);
     }
 
-    updateCanvas(onsetData) {
-        onsetValues.shift();
-        onsetValues.push(onsetData.value);
-        
-        thresholdValues.shift();
-        thresholdValues.push(onsetData.threshold);
-        
-        peakValues.shift();
-        peakValues.push(onsetData.isPeak);
+    startLoop() {
+        if (!this.frameId) {
+            this.frameId = window.requestAnimationFrame(this.loop);
+        }
+    }
 
+    loop() {
+        this.drawCanvas()
+        this.frameId = window.requestAnimationFrame(this.loop)
+    }
+
+    stopLoop() {
+        window.cancelAnimationFrame(this.frameId);
+    }
+
+
+    drawCanvas() {
         const onsetCanvasCtx = this.canvas.getContext('2d');
         onsetCanvasCtx.fillStyle = 'black';
         onsetCanvasCtx.fillRect(0, 0, w, h);
