@@ -4,7 +4,7 @@ import {
     SET_ONSET_DATA,
     SET_THRESHOLD,
     TOGGLE_AUTO_THRESHOLD_IS_ACTIVE,
-} from '/client/actions/actionTypes';
+} from '../actions/actionTypes';
 
 const initialState = {
     isRunning: false,

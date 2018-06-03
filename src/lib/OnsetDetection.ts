@@ -3,7 +3,7 @@ import WebAudioEngine from './AudioEngine/WebAudioEngine';
 type OnsetResultData = {
     value: number,
     isPeak: boolean,
-    threshold: number,
+    threshold: number
 }
 
 class OnsetDetection {

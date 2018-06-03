@@ -1,6 +1,8 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import actions from '/client/actions/actionCreators';
+
+const actions = require('../actions/');
 
 const propTypes = {
     setUserThreshold: PropTypes.func.isRequired,
@@ -14,10 +16,14 @@ const mapStateToProps = state => ({
     autoThresholdIsActive: state.onsetDetection.autoThresholdIsActive,
 });
 
-const mapDispatchToProps = {
-    setUserThreshold: actions.setThreshold,
-    toggleAutoThresholdIsActive: actions.toggleAutoThresholdIsActive,
-};
+let mapDispatchToProps;
+(function () {
+    mapDispatchToProps = {
+        setUserThreshold: actions.setThreshold,
+        toggleAutoThresholdIsActive: actions.toggleAutoThresholdIsActive,
+    };
+})()
+
 
 class ThresholdController extends Component {
     constructor() {

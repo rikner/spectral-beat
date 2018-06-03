@@ -1,7 +1,7 @@
 import {
     SET_SETTINGS_VISIBILITY,
     TOGGLE_SETTINGS_VISIBILITY,
-} from '/client/actions/actionTypes';
+} from '../actions/actionTypes';
 
 const initialState = {
     settingsAreVisible: false,
