@@ -2,8 +2,8 @@
     "compilerOptions": {
         "strict": true,
         "allowJs": true,
-        "target": "es5",
-        "module": "commonjs",
+        "target": "es6",
+        "module": "es6",
         "sourceMap": true,
         "lib": [
             "es2015",

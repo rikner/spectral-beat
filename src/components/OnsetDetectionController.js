@@ -1,11 +1,13 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import OnsetDetection from '../lib/OnsetDetection';
-import actions from '../actions/actionCreators';
 import getRandomColor from '../lib/helpers';
 import ControlPanel from '../components/ControlPanel';
 
+const actions = require('../actions/');
+    
 const propTypes = {
     onsetDetectionIsRunning: PropTypes.bool.isRequired,
     setNewRandomColor: PropTypes.func.isRequired,

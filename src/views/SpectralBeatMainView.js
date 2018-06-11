@@ -1,11 +1,12 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import SettingsOverlay from '/client/components/SettingsOverlay';
-import ColorCanvas from '/client/components/ColorCanvas';
-import ControlPanel from '/client/components/ControlPanel';
-import OnsetDetectionController from '/client/components/OnsetDetectionController';
-import settingsActions from '/client/actions/actionCreators';
+import SettingsOverlay from '../components/SettingsOverlay';
+import ColorCanvas from '../components/ColorCanvas';
+import OnsetDetectionController from '../components/OnsetDetectionController';
+
+const actions = require('../actions/actionCreators');
 
 class SpectralBeatMainView extends Component {
     componentDidMount() {
@@ -34,7 +35,7 @@ const mapStateToProps = ({ settings }) => ({
 
 const mapDispatchToProps = dispatch => ({
     setSettingsVisibility: (visible) => {
-        dispatch(settingsActions.setSettingsVisibility(visible));
+        dispatch(actions.setSettingsVisibility(visible));
     },
 });
 

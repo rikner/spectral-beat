@@ -1,6 +1,6 @@
 import {
     SET_CANVAS_COLOR,
-} from '/client/actions/actionTypes';
+} from '../actions/actionTypes';
 
 const initialState = {
     currentColor: 'black',
