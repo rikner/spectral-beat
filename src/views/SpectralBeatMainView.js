@@ -15,7 +15,7 @@ class SpectralBeatMainView extends Component {
     render() {
         const { settingsAreVisible } = this.props;
         return (
-            <div>
+            <div style={styles.main}>
                 <ColorCanvas />
                 <OnsetDetectionController />
                 { settingsAreVisible ? <SettingsOverlay /> : null }
@@ -23,6 +23,12 @@ class SpectralBeatMainView extends Component {
         );
     }
 }
+
+const styles = {
+    main: {
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans","Droid Sans", "Helvetica Neue", sans-serif',
+    },
+};
 
 SpectralBeatMainView.propTypes = {
     settingsAreVisible: PropTypes.bool.isRequired,
