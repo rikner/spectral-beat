@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import ControlButton from './Button';
 
 const propTypes = {
-    onClickStart: PropTypes.func.isRequired,
-    onClickStop: PropTypes.func.isRequired,
+    onClickStartStop: PropTypes.func.isRequired,
     onClickSettings: PropTypes.func.isRequired,
+    isRunning: PropTypes.bool.isRequired,
 };
 
 class ControlPanel extends Component {
     render() {
-        const { onClickStart, onClickStop, onClickSettings } = this.props;
+        const { onClickStartStop, onClickSettings, isRunning } = this.props;
         return (
             <div
                 style={{
@@ -22,13 +22,10 @@ class ControlPanel extends Component {
                 }}
             >
                 <ControlButton
-                    label='Start'
-                    onClick={onClickStart}
+                    label={isRunning ? "Stop" : "Start"}
+                    onClick={() => onClickStartStop(!isRunning) }
                 />
-                <ControlButton
-                    label='Stop'
-                    onClick={onClickStop}
-                />
+
                 <ControlButton
                     label='Settings'
                     onClick={onClickSettings}

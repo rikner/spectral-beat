@@ -74,12 +74,17 @@ class OnsetDetectionController extends Component {
     }
 
     render() {
-        const { setOnsetDetectionRunning, toggleSettingsVisibility } = this.props;
+        const {
+            onsetDetectionIsRunning,
+            setOnsetDetectionRunning,
+            toggleSettingsVisibility
+        } = this.props;
+
         return (
             <ControlPanel
-                onClickStart={() => { setOnsetDetectionRunning(true); }}
-                onClickStop={() => { setOnsetDetectionRunning(false); }}
+                onClickStartStop={(isRunning) => { setOnsetDetectionRunning(isRunning); }}
                 onClickSettings={toggleSettingsVisibility}
+                isRunning={onsetDetectionIsRunning}
             />
         );
     }
