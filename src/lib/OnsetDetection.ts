@@ -3,7 +3,7 @@ import WebAudioEngine from './AudioEngine/WebAudioEngine';
 type OnsetResultData = {
     value: number,
     isPeak: boolean,
-    threshold: number,
+    threshold: number
 }
 
 class OnsetDetection {
@@ -54,7 +54,6 @@ class OnsetDetection {
 
         const currentIsPeak = checkForRecentPeak(this.onsetValues.slice(), this.threshold);
         if (currentIsPeak) {
-            console.log("onset detected")
             this.onOnsetDetected();
         }
 
@@ -88,10 +87,6 @@ const computeSpectralFlux = (previousSpectrum: Uint8Array, spectrum: Uint8Array)
     flux = Math.sqrt(flux);
     flux /= (spectrum.length);
     return flux;
-};
-
-const defautOnOnsetDetected = () => {
-    console.log('onset detected');
 };
 
 const calculateThreshold = (arr: Array<number>): number => {

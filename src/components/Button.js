@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const ControlButton = ({ label, onClick }) => (
     <div style={styles.button} onClick={onClick}>
@@ -11,14 +12,14 @@ const styles = {
         width: 100,
         textAlign: 'center',
         backgroundColor: 'black',
+        opacity: 0.5,
         color: 'white',
         padding: '0.5em',
-        fontFamily: 'Allerta Stencil',
         fontSize: 18,
         cornerRadius: 3,
         borderStyle: 'solid',
         borderColor: 'white',
-        borderRadius: 10,
+        borderRadius: 7,
         borderWidth: 2,
 
     },

@@ -1,11 +1,12 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import SettingsOverlay from '/client/components/SettingsOverlay';
-import ColorCanvas from '/client/components/ColorCanvas';
-import ControlPanel from '/client/components/ControlPanel';
-import OnsetDetectionController from '/client/components/OnsetDetectionController';
-import settingsActions from '/client/actions/actionCreators';
+import SettingsOverlay from '../components/SettingsOverlay';
+import ColorCanvas from '../components/ColorCanvas';
+import OnsetDetectionController from '../components/OnsetDetectionController';
+
+const actions = require('../actions/actionCreators');
 
 class SpectralBeatMainView extends Component {
     componentDidMount() {
@@ -14,7 +15,7 @@ class SpectralBeatMainView extends Component {
     render() {
         const { settingsAreVisible } = this.props;
         return (
-            <div>
+            <div style={styles.main}>
                 <ColorCanvas />
                 <OnsetDetectionController />
                 { settingsAreVisible ? <SettingsOverlay /> : null }
@@ -22,6 +23,12 @@ class SpectralBeatMainView extends Component {
         );
     }
 }
+
+const styles = {
+    main: {
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans","Droid Sans", "Helvetica Neue", sans-serif',
+    },
+};
 
 SpectralBeatMainView.propTypes = {
     settingsAreVisible: PropTypes.bool.isRequired,
@@ -34,7 +41,7 @@ const mapStateToProps = ({ settings }) => ({
 
 const mapDispatchToProps = dispatch => ({
     setSettingsVisibility: (visible) => {
-        dispatch(settingsActions.setSettingsVisibility(visible));
+        dispatch(actions.setSettingsVisibility(visible));
     },
 });
 
