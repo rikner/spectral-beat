@@ -10,13 +10,13 @@ import {
 } from './actionTypes';
 
 export const setSettingsVisibility = settingsAreVisible => ({
-    type: SET_SETTINGS_VISIBILITY,
     settingsAreVisible,
+    type: SET_SETTINGS_VISIBILITY,
 });
 
 export const setCanvasColor = color => ({
-    type: SET_CANVAS_COLOR,
     color,
+    type: SET_CANVAS_COLOR,
 });
 
 export const toggleSettingsVisibility = () => ({
@@ -28,18 +28,18 @@ export const toggleOnsetDetectionRunning = () => ({
 });
 
 export const setOnsetDetectionRunning = isRunning => ({
-    type: SET_ONSET_DETECTION_RUNNING,
     isRunning,
+    type: SET_ONSET_DETECTION_RUNNING,
 });
 
 export const setOnsetData = onsetData => ({
-    type: SET_ONSET_DATA,
     onsetData,
+    type: SET_ONSET_DATA,
 });
 
 export const setThreshold = threshold => ({
-    type: SET_THRESHOLD,
     threshold,
+    type: SET_THRESHOLD,
 });
 
 export const toggleAutoThresholdIsActive = () => ({

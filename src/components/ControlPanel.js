@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import ControlButton from './Button';
 
 const propTypes = {
-    onClickStartStop: PropTypes.func.isRequired,
-    onClickSettings: PropTypes.func.isRequired,
     isRunning: PropTypes.bool.isRequired,
+    onClickSettings: PropTypes.func.isRequired,
+    onClickStartStop: PropTypes.func.isRequired,
 };
 
 class ControlPanel extends Component {
@@ -14,11 +14,11 @@ class ControlPanel extends Component {
         return (
             <div
                 style={{
-                    position: 'relative',
+                    alignItems: 'center',
                     display: 'flex',
                     flexDirection: 'row',
-                    alignItems: 'center',
                     justifyContent: 'space-around',
+                    position: 'relative',
                 }}
             >
                 <ControlButton

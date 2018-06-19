@@ -9,19 +9,18 @@ const ControlButton = ({ label, onClick }) => (
 
 const styles = {
     button: {
-        width: 100,
-        textAlign: 'center',
         backgroundColor: 'black',
-        opacity: 0.5,
-        color: 'white',
-        padding: '0.5em',
-        fontSize: 18,
-        cornerRadius: 3,
-        borderStyle: 'solid',
         borderColor: 'white',
         borderRadius: 7,
+        borderStyle: 'solid',
         borderWidth: 2,
-
+        color: 'white',
+        cornerRadius: 3,
+        fontSize: 18,
+        opacity: 0.5,
+        padding: '0.5em',
+        textAlign: 'center',
+        width: 100,
     },
 };
 

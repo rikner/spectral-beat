@@ -5,15 +5,15 @@ import { connect } from 'react-redux';
 const actions = require('../actions/');
 
 const propTypes = {
+    autoThresholdIsActive: PropTypes.bool.isRequired,
     setUserThreshold: PropTypes.func.isRequired,
     toggleAutoThresholdIsActive: PropTypes.func.isRequired,
     userThreshold: PropTypes.number.isRequired,
-    autoThresholdIsActive: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
-    userThreshold: state.onsetDetection.userThreshold,
     autoThresholdIsActive: state.onsetDetection.autoThresholdIsActive,
+    userThreshold: state.onsetDetection.userThreshold,
 });
 
 let mapDispatchToProps;
