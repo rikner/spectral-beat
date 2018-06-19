@@ -32,9 +32,9 @@ function updateCanvas(onsetData) {
 
 const propTypes = {
     onsetData: PropTypes.shape({
-        value: PropTypes.number.isRequired,
-        threshold: PropTypes.number.isRequired,
         isPeak: PropTypes.bool.isRequired,
+        threshold: PropTypes.number.isRequired,
+        value: PropTypes.number.isRequired,
     }).isRequired,
 };
 

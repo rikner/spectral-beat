@@ -7,14 +7,14 @@ import {
 } from '../actions/actionTypes';
 
 const initialState = {
+    autoThresholdIsActive: true,
     isRunning: false,
     onsetData: {
-        value: 0,
-        threshold: 0,
         isPeak: false,
+        threshold: 0,
+        value: 0,
     },
     userThreshold: 0,
-    autoThresholdIsActive: true,
 };
 
 export default function onsetDetection(state = initialState, action = {}) {

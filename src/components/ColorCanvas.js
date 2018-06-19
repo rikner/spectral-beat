@@ -8,10 +8,10 @@ const ColorCanvas = ({ currentColor }) => (
         style={{
             backgroundColor: currentColor,
             height: '100%',
-            width: '100%',
-            position: 'absolute',
             left: 0,
-            top: 0
+            position: 'absolute',
+            top: 0,
+            width: '100%',
         }}
     />
 );
