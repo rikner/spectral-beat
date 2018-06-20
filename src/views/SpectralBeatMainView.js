@@ -31,8 +31,8 @@ const styles = {
 };
 
 SpectralBeatMainView.propTypes = {
-    settingsAreVisible: PropTypes.bool.isRequired,
     setSettingsVisibility: PropTypes.func.isRequired,
+    settingsAreVisible: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = ({ settings }) => ({

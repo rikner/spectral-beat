@@ -9,36 +9,36 @@ import ControlPanel from '../components/ControlPanel';
 const actions = require('../actions/');
     
 const propTypes = {
+    autoThresholdIsActive: PropTypes.bool.isRequired,
     onsetDetectionIsRunning: PropTypes.bool.isRequired,
     setNewRandomColor: PropTypes.func.isRequired,
-    toggleSettingsVisibility: PropTypes.func.isRequired,
-    setOnsetDetectionRunning: PropTypes.func.isRequired,
     setOnsetData: PropTypes.func.isRequired,
-    autoThresholdIsActive: PropTypes.bool.isRequired,
+    setOnsetDetectionRunning: PropTypes.func.isRequired,
+    toggleSettingsVisibility: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-    onsetDetectionIsRunning: state.onsetDetection.isRunning,
     autoThresholdIsActive: state.onsetDetection.autoThresholdIsActive,
+    onsetDetectionIsRunning: state.onsetDetection.isRunning,
     userThreshold: state.onsetDetection.userThreshold,
 });
 
 const mapDispatchToProps = dispatch => ({
+    setCanvasColor: (color) => {
+        dispatch(actions.setCanvasColor(color));
+    },
     setNewRandomColor: () => {
         const color = getRandomColor();
         dispatch(actions.setCanvasColor(color));
     },
-    setCanvasColor: (color) => {
-        dispatch(actions.setCanvasColor(color));
-    },
-    toggleSettingsVisibility: () => {
-        dispatch(actions.toggleSettingsVisibility());
+    setOnsetData: (onsetData) => {
+        dispatch(actions.setOnsetData(onsetData));
     },
     setOnsetDetectionRunning: (isRunning) => {
         dispatch(actions.setOnsetDetectionRunning(isRunning));
     },
-    setOnsetData: (onsetData) => {
-        dispatch(actions.setOnsetData(onsetData));
+    toggleSettingsVisibility: () => {
+        dispatch(actions.toggleSettingsVisibility());
     },
 });
 
@@ -68,7 +68,6 @@ class OnsetDetectionController extends Component {
         }
 
         if (nextProps.userThreshold !== this.props.userThreshold) {
-            console.log("setting onset detection user threshold");
             this.onsetDetection.setThreshold(nextProps.userThreshold);
         }
     }
