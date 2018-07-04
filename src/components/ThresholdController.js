@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-const actions = require('../actions/');
+import * as actions from '../actions';
 
 const propTypes = {
     autoThresholdIsActive: PropTypes.bool.isRequired,
@@ -16,32 +16,21 @@ const mapStateToProps = state => ({
     userThreshold: state.onsetDetection.userThreshold,
 });
 
-let mapDispatchToProps;
-(function () {
-    mapDispatchToProps = {
-        setUserThreshold: actions.setThreshold,
-        toggleAutoThresholdIsActive: actions.toggleAutoThresholdIsActive,
-    };
-})()
+
+const mapDispatchToProps = {
+    setUserThreshold: actions.setThreshold,
+    toggleAutoThresholdIsActive: actions.toggleAutoThresholdIsActive,
+};
+
 
 
 class ThresholdController extends Component {
-    constructor() {
-        super();
-        this.toggleCheckboxChange = this.toggleCheckboxChange.bind(this);
-        this.handleThresholdChange = this.handleThresholdChange.bind(this);
-    }
-
-    toggleCheckboxChange() {
-        this.props.toggleAutoThresholdIsActive();
-    }
-
-    handleThresholdChange(event) {
+    handleThresholdChange = (event) => {
         this.props.setUserThreshold(parseFloat(event.target.value));
     }
 
     render() {
-        const { autoThresholdIsActive, userThreshold } = this.props;
+        const { autoThresholdIsActive, userThreshold, toggleAutoThresholdIsActive } = this.props;
         return (
             <div>
                 <label htmlFor='autoThresholdIsActive'>Auto Threshold</label>
@@ -49,19 +38,24 @@ class ThresholdController extends Component {
                     type='checkbox'
                     name='autoThresholdIsActive'
                     checked={autoThresholdIsActive}
-                    onChange={this.toggleCheckboxChange}
+                    onChange={toggleAutoThresholdIsActive}
                 />
 
-                {!autoThresholdIsActive && <input
-                    type='range'
-                    name='threshold'
-                    onChange={this.handleThresholdChange}
-                    // value={threshold}
-                    min={0}
-                    max={2.5}
-                    step={0.001}
-                />}
-                 <label>{userThreshold}</label>
+                {!autoThresholdIsActive && 
+                    <input
+                        type='range'
+                        name='threshold'
+                        onChange={this.handleThresholdChange}
+                        min={0}
+                        max={2.5}
+                        step={0.001}
+                    />
+                }
+                
+                {!autoThresholdIsActive && 
+                    <label>{userThreshold}</label>
+                }
+                 
             </div>
         );
     }

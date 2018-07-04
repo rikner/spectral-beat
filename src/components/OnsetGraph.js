@@ -14,10 +14,10 @@ const peakValues = new Array(w);
 function updateCanvas(onsetData) {
     onsetValues.shift();
     onsetValues.push(onsetData.value);
-
+    
     thresholdValues.shift();
     thresholdValues.push(onsetData.threshold);
-
+    
     peakValues.shift();
     peakValues.push(onsetData.isPeak);
 }
@@ -43,68 +43,65 @@ const mapStateToProps = state => ({
 });
 
 class OnsetGraph extends Component {
-
-    constructor() {
-        super();
-        this.loop = this.loop.bind(this);
-        this.drawCanvas = this.drawCanvas.bind(this);
-    }
-
-    componentDidMount() {
+    componentDidMount = () => {
         this.startLoop();
-
-    }
-
-    componentWillUnmount() {
+    };
+    
+    componentWillUnmount = () => {
         this.stopLoop();
-    }
-
-    componentWillUpdate(nextProps) {
+    };
+    
+    componentWillUpdate = (nextProps) => {
         updateCanvas(nextProps.onsetData);
     }
-
-    startLoop() {
+    
+    startLoop = () => {
         if (!this.frameId) {
             this.frameId = window.requestAnimationFrame(this.loop);
         }
     }
-
-    loop() {
-        this.drawCanvas()
-        this.frameId = window.requestAnimationFrame(this.loop)
+    
+    loop = () => {
+        this.drawCanvas();
+        this.frameId = window.requestAnimationFrame(this.loop);
     }
-
-    stopLoop() {
+    
+    stopLoop = () => {
         window.cancelAnimationFrame(this.frameId);
     }
-
-
-    drawCanvas() {
-        const onsetCanvasCtx = this.canvas.getContext('2d');
-        onsetCanvasCtx.fillStyle = 'black';
+    
+    drawCanvas = () => {
+        const onsetCanvasCtx = this.canvas.getContext("2d");
+        onsetCanvasCtx.fillStyle = "black";
         onsetCanvasCtx.fillRect(0, 0, w, h);
-
-        onsetCanvasCtx.fillStyle = 'pink';
+        
+        onsetCanvasCtx.fillStyle = "pink";
         for (let i = 0; i < peakValues.length; i++) {
             if (peakValues[i] === true) {
                 onsetCanvasCtx.fillRect(i, h, 1, -onsetValues[i] * onsetScale);
             }
         }
-
-        onsetCanvasCtx.fillStyle = 'blue';
+        
+        onsetCanvasCtx.fillStyle = "blue";
         for (let i = 0; i < thresholdValues.length; i++) {
             onsetCanvasCtx.fillRect(i, h, 1, -thresholdValues[i] * onsetScale);
         }
-
-        onsetCanvasCtx.fillStyle = 'white';
+        
+        onsetCanvasCtx.fillStyle = "white";
         for (let i = 0; i < onsetValues.length; i++) {
             onsetCanvasCtx.fillRect(i, h, 1, -onsetValues[i] * onsetScale);
         }
     }
-
+    
     render() {
         return (
-            <canvas ref={(canvas) => { this.canvas = canvas; }} width={w} height={h} />
+            <canvas
+            ref={canvas => {
+                this.canvas = canvas;
+            }}
+            width={w}
+            height={h}
+            />
         );
     }
 }

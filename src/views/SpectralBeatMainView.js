@@ -6,7 +6,7 @@ import SettingsOverlay from '../components/SettingsOverlay';
 import ColorCanvas from '../components/ColorCanvas';
 import OnsetDetectionController from '../components/OnsetDetectionController';
 
-const actions = require('../actions/actionCreators');
+import * as actions from "../actions";
 
 class SpectralBeatMainView extends Component {
     componentDidMount() {

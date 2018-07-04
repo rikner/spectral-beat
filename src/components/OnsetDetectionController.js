@@ -6,7 +6,7 @@ import OnsetDetection from '../lib/OnsetDetection';
 import getRandomColor from '../lib/helpers';
 import ControlPanel from '../components/ControlPanel';
 
-const actions = require('../actions/');
+import * as actions from "../actions";
     
 const propTypes = {
     autoThresholdIsActive: PropTypes.bool.isRequired,
