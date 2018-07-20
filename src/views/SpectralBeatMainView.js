@@ -9,15 +9,13 @@ import OnsetDetectionController from '../components/OnsetDetectionController';
 import * as actions from "../actions";
 
 class SpectralBeatMainView extends Component {
-    componentDidMount() {
-        this.props.setSettingsVisibility(true);
-    }
     render() {
         const { settingsAreVisible } = this.props;
         return (
             <div style={styles.main}>
                 <ColorCanvas />
                 <OnsetDetectionController />
+
                 { settingsAreVisible ? <SettingsOverlay /> : null }
             </div>
         );

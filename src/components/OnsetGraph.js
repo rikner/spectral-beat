@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 const canvasWidth = 512;
-const canvasHeight = 600;
+const canvasHeight = 400;
 const onsetScale = 100;
 
 const onsetValues = new Array(canvasWidth);
