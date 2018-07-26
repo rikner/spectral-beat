@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-const canvasWidth = 512;
-const canvasHeight = 400;
+const canvasWidth = Math.round(window.innerWidth / 3);
+const canvasHeight = Math.round(window.innerHeight / 3);
 const onsetScale = 100;
 
 const onsetValues = new Array(canvasWidth);
@@ -72,7 +72,7 @@ class OnsetGraph extends Component {
 
     drawCanvas = () => {
         const onsetCanvasCtx = this.canvas.getContext("2d");
-        onsetCanvasCtx.fillStyle = "black"; // e.g. rgba(0, 0, 200, 0.5)
+        onsetCanvasCtx.fillStyle = "green"; // e.g. rgba(0, 0, 200, 0.5)
         onsetCanvasCtx.fillRect(0, 0, canvasWidth, canvasHeight);
 
         onsetCanvasCtx.fillStyle = "blue";

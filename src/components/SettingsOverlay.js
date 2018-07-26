@@ -11,6 +11,7 @@ class SettingsOverlay extends Component {
                 flexDirection: 'column',
                 justifyContent: 'space-around',
                 position: 'relative',
+                top: '2em'
             }}>
                 <OnsetGraph />
                 <ThresholdController />
