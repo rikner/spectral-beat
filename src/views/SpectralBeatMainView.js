@@ -15,8 +15,10 @@ class SpectralBeatMainView extends Component {
             <div style={styles.main}>
                 <ColorCanvas />
                 <OnsetDetectionController />
-
-                { settingsAreVisible ? <SettingsOverlay /> : null }
+                { settingsAreVisible 
+                    ? <SettingsOverlay /> 
+                    : null 
+                }
             </div>
         );
     }
