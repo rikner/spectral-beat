@@ -6,30 +6,6 @@ const canvasWidth = Math.round(window.innerWidth / 3);
 const canvasHeight = Math.round(window.innerHeight / 3);
 const onsetScale = 100;
 
-const onsetValues = new Array(canvasWidth);
-const thresholdValues = new Array(canvasWidth);
-const peakValues = new Array(canvasWidth);
-
-
-function updateCanvas(onsetData) {
-    onsetValues.shift();
-    onsetValues.push(onsetData.value);
-
-    thresholdValues.shift();
-    thresholdValues.push(onsetData.threshold);
-
-    peakValues.shift();
-    peakValues.push(onsetData.isPeak);
-}
-
-(function () {
-    for (let i = 0; i < canvasWidth; i++) {
-        onsetValues[i] = 0;
-        thresholdValues[i] = 0;
-        peakValues[i] = false;
-    }
-}());
-
 const propTypes = {
     onsetData: PropTypes.shape({
         isPeak: PropTypes.bool.isRequired,
@@ -43,6 +19,20 @@ const mapStateToProps = state => ({
 });
 
 class OnsetGraph extends Component {
+    constructor() {
+        super();
+        
+        this.onsetValues = new Array(canvasWidth);
+        this.thresholdValues = new Array(canvasWidth);
+        this.peakValues = new Array(canvasWidth);
+
+        for (let i = 0; i < canvasWidth; i++) {
+            this.onsetValues[i] = 0;
+            this.thresholdValues[i] = 0;
+            this.peakValues[i] = false;
+        }
+    }
+
     componentDidMount = () => {
         this.startLoop();
     };
@@ -52,7 +42,17 @@ class OnsetGraph extends Component {
     };
 
     componentWillUpdate = (nextProps) => {
-        updateCanvas(nextProps.onsetData);
+        const onsetData = nextProps.onsetData
+
+        this.onsetValues.shift();
+        this.onsetValues.push(onsetData.value);
+
+        this.thresholdValues.shift();
+        this.thresholdValues.push(onsetData.threshold);
+
+        this.peakValues.shift();
+        this.peakValues.push(onsetData.isPeak);
+
     }
 
     startLoop = () => {
@@ -76,17 +76,17 @@ class OnsetGraph extends Component {
         onsetCanvasCtx.fillRect(0, 0, canvasWidth, canvasHeight);
 
         onsetCanvasCtx.fillStyle = "blue";
-        thresholdValues.forEach((value, i) => {
+        this.thresholdValues.forEach((value, i) => {
             onsetCanvasCtx.fillRect(i, canvasHeight, 1, -value * onsetScale);
         })
 
         onsetCanvasCtx.fillStyle = "white";
-        onsetValues.forEach((value, i) => {
+        this.onsetValues.forEach((value, i) => {
             onsetCanvasCtx.fillRect(i, canvasHeight, 1, -value * onsetScale);
         })
 
         onsetCanvasCtx.fillStyle = "grey";
-        peakValues.forEach((value, i) => {
+        this.peakValues.forEach((value, i) => {
             if (value === true) {
                 onsetCanvasCtx.fillRect(i, canvasHeight, 1, -canvasHeight);
             }
