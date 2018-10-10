@@ -13,7 +13,7 @@ class SettingsOverlay extends Component {
                 position: 'relative',
                 top: '2em'
             }}>
-                <OnsetGraph />
+                <OnsetGraph canvasHeight={100} canvasWidth={100}/>
                 <ThresholdController />
             </div >
         );
