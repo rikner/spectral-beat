@@ -7,13 +7,13 @@ interface IOnsetResultData {
 }
 
 class OnsetDetection {
-	private static inputBinCount: number = 512;
+	private static bufferSize: number = 512;
 	
 	public onProcessCallbacks: Array<(data: IOnsetResultData) => void> = [];
 	public onOnsetDetected: (() => void) | null = null;
 	
-	private audioEngine = new WebAudioEngine(OnsetDetection.inputBinCount * 2);
-	private previousSpectrum = new Uint8Array(OnsetDetection.inputBinCount);
+	private audioEngine = new WebAudioEngine(OnsetDetection.bufferSize);
+	private previousSpectrum = new Float32Array(this.audioEngine.frequencyBinCount);
 	private onsetValues: number[];
 	private shouldCalculateThreshold: boolean = true;
 	private threshold: number = 0;
@@ -26,7 +26,7 @@ class OnsetDetection {
 	}
 	
 	public startAudioProcessing() {
-		this.audioEngine.onByteFrequencyData = this.run;
+		this.audioEngine.onFloatFrequencyData = this.run;
 		this.audioEngine.start();
 	}
 	
@@ -43,7 +43,7 @@ class OnsetDetection {
 		}
 	}
 	
-	private run = (spectrum: Uint8Array) => {
+	private run = (spectrum: Float32Array) => {
 		if (spectrum.length !== this.previousSpectrum.length) {
 			console.error("previous and current spectrum don't have the same length");
 			return;
@@ -81,8 +81,8 @@ class OnsetDetection {
 	};
 }
 
-const computeSpectralFlux = (previousSpectrum: Uint8Array, spectrum: Uint8Array): number => {
-	let flux = spectrum.reduce((prev, cur, i) => {
+const computeSpectralFlux = (previousSpectrum: Float32Array, spectrum: Float32Array): number => {
+	const flux = spectrum.reduce((prev, cur, i) => {
 		let diff = previousSpectrum[i] - cur;
 		if (diff < 0) {
 			return prev;
@@ -91,9 +91,7 @@ const computeSpectralFlux = (previousSpectrum: Uint8Array, spectrum: Uint8Array)
 		return prev + diff;
 	}, 0);
 	
-	flux = Math.sqrt(flux);
-	flux /= spectrum.length;
-	return flux;
+	return Math.sqrt(flux) / spectrum.length;
 };
 
 const calculateThreshold = (arr: number[]): number => {

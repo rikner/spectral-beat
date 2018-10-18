@@ -1,5 +1,5 @@
 class WebAudioEngine {
-	public onByteFrequencyData: ((data: Uint8Array) => void) | null = null;
+	public onFloatFrequencyData: ((data: Float32Array) => void) | null = null;
 	
 	private audioContext: AudioContext;
 	
@@ -11,7 +11,7 @@ class WebAudioEngine {
 	private processingNode: ScriptProcessorNode;
 	private gainNode: GainNode;
 	private bufferSize: number;
-	
+
 	constructor(bufferSize: number) {
 		const AudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
 		this.audioContext = new AudioContext();
@@ -34,7 +34,6 @@ class WebAudioEngine {
 		
 		// fft
 		this.analyserNode = this.audioContext.createAnalyser();
-		this.analyserNode.fftSize = this.bufferSize / 2;
 		
 		// processing
 		this.processingNode = this.audioContext.createScriptProcessor(this.bufferSize, 1, 1);
@@ -44,6 +43,10 @@ class WebAudioEngine {
 		this.gainNode = this.audioContext.createGain();
 		this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime + 1);
 	}
+	
+	public get frequencyBinCount() : number {
+		return this.analyserNode.frequencyBinCount;
+	}	
 	
 	public start(): void {
 		if (!this.inputNode) {
@@ -68,11 +71,11 @@ class WebAudioEngine {
 	}
 	
 	private audioProcessingCallback = (audioProcessingEvent: AudioProcessingEvent) => {
-		const byteFrequencyData = new Uint8Array(this.bufferSize / 2);
-		this.analyserNode.getByteTimeDomainData(byteFrequencyData);
-		
-		if (this.onByteFrequencyData) {
-			this.onByteFrequencyData(byteFrequencyData);
+		const dataArray = new Float32Array(this.analyserNode.frequencyBinCount);
+		void this.analyserNode.getFloatTimeDomainData(dataArray);
+
+		if (this.onFloatFrequencyData) {
+			this.onFloatFrequencyData(dataArray);
 		}
 	};
 }

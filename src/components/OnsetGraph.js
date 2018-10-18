@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-const onsetScale = 100;
+const onsetScale = 10000;
 
 const propTypes = {
     canvasHeight: PropTypes.number.isRequired,
