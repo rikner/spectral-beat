@@ -47,8 +47,8 @@ class ThresholdController extends Component {
                         name='threshold'
                         onChange={this.handleThresholdChange}
                         min={0}
-                        max={2.5}
-                        step={0.001}
+                        max={0.02}
+                        step={0.00001}
                     />
                 }
                 
