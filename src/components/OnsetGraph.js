@@ -21,14 +21,16 @@ const mapStateToProps = state => ({
 class OnsetGraph extends Component {
     constructor(props) {
         super(props);
+        const { canvasWidth } = props;
+        this.createDataArrays(canvasWidth);
+    }
 
-        const { canvasHeight, canvasWidth } = props;
+    createDataArrays(length) {
+        this.onsetValues = new Array(length);
+        this.thresholdValues = new Array(length);
+        this.peakValues = new Array(length);
 
-        this.onsetValues = new Array(canvasWidth);
-        this.thresholdValues = new Array(canvasWidth);
-        this.peakValues = new Array(canvasWidth);
-
-        for (let i = 0; i < canvasWidth; i++) {
+        for (let i = 0; i < length; i++) {
             this.onsetValues[i] = 0;
             this.thresholdValues[i] = 0;
             this.peakValues[i] = false;
@@ -44,7 +46,16 @@ class OnsetGraph extends Component {
     };
 
     componentDidUpdate = (prevProps) => {
-        const onsetData = this.props.onsetData
+        const { onsetData, canvasWidth } = this.props
+
+        if (prevProps.canvasWidth !== canvasWidth) {
+            // XXX: there might a better solution than creating new ararys
+            // everytime the width changes, but I guess it's allright for now
+            // since one doesn't resize it all the time
+            this.createDataArrays(canvasWidth);
+        }
+
+        const { value, threshold, isPeak } = onsetData;
 
         this.onsetValues.shift();
         this.onsetValues.push(onsetData.value);
@@ -76,8 +87,14 @@ class OnsetGraph extends Component {
         const { canvasHeight, canvasWidth } = this.props;
 
         const onsetCanvasCtx = this.canvas.getContext("2d");
-        onsetCanvasCtx.fillStyle = "green"; // e.g. rgba(0, 0, 200, 0.5)
+
+        const backgroundGradient = onsetCanvasCtx.createLinearGradient(0, 0, 0, 170);
+        backgroundGradient.addColorStop(0, "blue");
+        backgroundGradient.addColorStop(1, "black");
+
+        onsetCanvasCtx.fillStyle = backgroundGradient;
         onsetCanvasCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+
 
         onsetCanvasCtx.fillStyle = "blue";
         this.thresholdValues.forEach((value, i) => {
@@ -100,13 +117,24 @@ class OnsetGraph extends Component {
     render() {
         const { canvasHeight, canvasWidth } = this.props;
         return (
-            <canvas
-                ref={canvas => {
-                    this.canvas = canvas;
-                }}
-                width={canvasWidth}
-                height={canvasHeight}
-            />
+            <div style={{
+                borderColor: 'white',
+                borderRadius: 7,
+                borderStyle: 'solid',
+                borderWidth: 5,
+                cornerRadius: 3,
+                height: canvasHeight,
+                opacity: 0.75,
+                width: canvasWidth,
+            }}>
+                <canvas
+                    ref={canvas => {
+                        this.canvas = canvas;
+                    }}
+                    width={canvasWidth}
+                    height={canvasHeight}
+                />
+            </div>
         );
     }
 }
