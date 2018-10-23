@@ -15,8 +15,7 @@ class SettingsOverlay extends Component {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-around',
-                position: 'relative',
-                top: '2em',
+                marginBottom: '1em'
             }}>
                 <OnsetGraph
                     canvasHeight={Math.round(windowHeight / 3)}

@@ -18,6 +18,7 @@ class ControlPanel extends Component {
                     display: 'flex',
                     flexDirection: 'row',
                     justifyContent: 'space-around',
+                    marginTop: '1em',
                     position: 'relative',
                 }}
             >

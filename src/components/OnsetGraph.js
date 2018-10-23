@@ -118,10 +118,10 @@ class OnsetGraph extends Component {
         const { canvasHeight, canvasWidth } = this.props;
         return (
             <div style={{
-                borderColor: 'white',
+                borderColor: '#CCCCCC',
                 borderRadius: 7,
                 borderStyle: 'solid',
-                borderWidth: 5,
+                borderWidth: 4,
                 cornerRadius: 3,
                 height: canvasHeight,
                 opacity: 0.75,
