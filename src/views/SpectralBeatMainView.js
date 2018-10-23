@@ -4,56 +4,46 @@ import { connect } from 'react-redux';
 
 import SettingsOverlay from '../components/SettingsOverlay';
 import OnsetDetectionController from '../components/OnsetDetectionController';
-
 import * as actions from '../actions';
 
-class SpectralBeatMainView extends Component {
-    render() {
-        const { settingsAreVisible, backgroundColor } = this.props;
+const SpectralBeatMainView = ({ settingsAreVisible, backgroundColor }) =>
+    <div style={{ backgroundColor, ...styles.main }}>
+        <div style={styles.controllerContainer}>
+            <OnsetDetectionController />
+        </div>
+        <div style={styles.settingsContainer} >
+            {settingsAreVisible
+                ? <SettingsOverlay />
+                : null
+            }
+        </div>
+    </div>
 
-        return (
-            <div
-                style={{
-                    alignItems: 'stretch',
-                    backgroundColor,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    fontFamily,
-                    height: '100%',
-                    justifyContent: 'space-between',
-                    left: 0,
-                    position: 'absolute',
-                    top: 0,
-                    width: '100%',
-                }}
-            >
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-start',
-                    }}
-                >
-                    <OnsetDetectionController />
-                </div>
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-end',
-                    }}
-                >
-                    {settingsAreVisible
-                        ? <SettingsOverlay />
-                        : null
-                    }
-                </div>
-            </div>
-        );
-    }
+
+const styles = {
+    controllerContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+    },
+    main: {
+        alignItems: 'stretch',
+        display: 'flex',
+        flexDirection: 'column',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans","Droid Sans", "Helvetica Neue", sans-serif',
+        height: '100%',
+        justifyContent: 'space-between',
+        left: 0,
+        position: 'absolute',
+        top: 0,
+        width: '100%',
+    },
+    settingsContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+    },
 }
-
-const fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans","Droid Sans", "Helvetica Neue", sans-serif';
 
 SpectralBeatMainView.propTypes = {
     setSettingsVisibility: PropTypes.func.isRequired,
