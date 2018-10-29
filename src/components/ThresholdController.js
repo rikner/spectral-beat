@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 import * as actions from '../actions';
 
@@ -25,37 +27,53 @@ const mapDispatchToProps = {
 
 
 class ThresholdController extends Component {
-    handleThresholdChange = (event) => {
-        this.props.setUserThreshold(parseFloat(event.target.value));
+    handleThresholdChange = value => {
+        this.props.setUserThreshold(parseFloat(value));
     }
 
     render() {
         const { autoThresholdIsActive, userThreshold, toggleAutoThresholdIsActive } = this.props;
         return (
-            <div>
-                <label htmlFor='autoThresholdIsActive'>Auto Threshold</label>
-                <input
-                    type='checkbox'
-                    name='autoThresholdIsActive'
-                    checked={autoThresholdIsActive}
-                    onChange={toggleAutoThresholdIsActive}
+            <div
+                style={{
+                    alignItems: 'center',
+                    backgroundColor: 'blue',
+                    borderColor: '#CCCCCC',
+                    borderRadius: 7,
+                    borderStyle: 'solid',
+                    borderWidth: 4,
+                    cornerRadius: 3,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    opacity: 0.75,
+                    padding: '1em',
+                }}
+            >
+                <div
+                    htmlFor='autoThresholdIsActive'
+                    style={{
+                        marginBottom: '0.7em'
+                    }}
+                >
+                    <input
+                        type='checkbox' 
+                        name='autoThresholdIsActive'
+                        checked={autoThresholdIsActive}
+                        onChange={toggleAutoThresholdIsActive}
+                    />
+                    Auto Threshold
+                </div>
+
+
+                <Slider
+                    min={0}
+                    max={0.02}
+                    step={0.00001}
+                    onChange={this.handleThresholdChange}
+                    disabled={autoThresholdIsActive}
                 />
 
-                {!autoThresholdIsActive && 
-                    <input
-                        type='range'
-                        name='threshold'
-                        onChange={this.handleThresholdChange}
-                        min={0}
-                        max={0.02}
-                        step={0.00001}
-                    />
-                }
-                
-                {!autoThresholdIsActive && 
-                    <label>{userThreshold}</label>
-                }
-                 
             </div>
         );
     }
