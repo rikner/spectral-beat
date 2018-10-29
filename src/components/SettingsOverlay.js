@@ -13,7 +13,7 @@ class SettingsOverlay extends Component {
             <div style={{
                 alignItems: 'center',
                 display: 'flex',
-                flexDirection: 'column',
+                flexDirection: 'row',
                 justifyContent: 'space-around',
                 marginBottom: '1em'
             }}>

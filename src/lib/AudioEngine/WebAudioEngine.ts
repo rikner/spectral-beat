@@ -17,6 +17,9 @@ class WebAudioEngine {
 		this.audioContext = new AudioContext();
 		this.bufferSize = bufferSize;
 		
+		navigator.mediaDevices.enumerateDevices()
+		.then(console.log);
+
 		navigator.mediaDevices
 		.getUserMedia({ audio: true })
 		.then(mediaStream => {
