@@ -51,18 +51,18 @@ class ThresholdController extends Component {
                 }}
             >
                 <div
-                    htmlFor='autoThresholdIsActive'
+                    htmlFor='manualThreshold'
                     style={{
                         marginBottom: '0.7em'
                     }}
                 >
                     <input
                         type='checkbox' 
-                        name='autoThresholdIsActive'
-                        checked={autoThresholdIsActive}
+                        name='manualThreshold'
+                        checked={!autoThresholdIsActive}
                         onChange={toggleAutoThresholdIsActive}
                     />
-                    Auto Threshold
+                    Manual Threshold
                 </div>
 
 
