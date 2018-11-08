@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import OnsetGraph from './OnsetGraph';
+import OnsetScaler from './OnsetScaler';
 import ThresholdController from './ThresholdController';
 import withSizes from 'react-sizes'
 
@@ -14,14 +15,14 @@ class SettingsOverlay extends Component {
                 alignItems: 'center',
                 display: 'flex',
                 flexDirection: 'row',
-                justifyContent: 'space-around',
+                justifyContent: 'center',
                 marginBottom: '1em'
             }}>
                 <OnsetGraph
                     canvasHeight={Math.round(windowHeight / 3)}
                     canvasWidth={Math.round(windowWidth / 2)}
                 />
-                <ThresholdController />
+                <OnsetScaler />
             </div>
         );
     }
