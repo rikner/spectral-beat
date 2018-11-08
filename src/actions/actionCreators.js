@@ -5,6 +5,7 @@ import {
     TOGGLE_ONSET_DETECTION_RUNNING,
     SET_ONSET_DETECTION_RUNNING,
     SET_ONSET_DATA,
+    SET_ONSET_GRAPH_SCALE,
     TOGGLE_AUTO_THRESHOLD_IS_ACTIVE,
     SET_THRESHOLD,
 } from './actionTypes';
@@ -35,6 +36,11 @@ export const setOnsetDetectionRunning = isRunning => ({
 export const setOnsetData = onsetData => ({
     onsetData,
     type: SET_ONSET_DATA,
+});
+
+export const setOnsetGraphScale = graphScale => ({
+    graphScale,
+    type: SET_ONSET_GRAPH_SCALE
 });
 
 export const setThreshold = threshold => ({

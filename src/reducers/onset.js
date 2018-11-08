@@ -1,5 +1,6 @@
 import {
     SET_ONSET_DETECTION_RUNNING,
+    SET_ONSET_GRAPH_SCALE,
     TOGGLE_ONSET_DETECTION_RUNNING,
     SET_ONSET_DATA,
     SET_THRESHOLD,
@@ -8,6 +9,7 @@ import {
 
 const initialState = {
     autoThresholdIsActive: true,
+    graphScale: 10000,
     isRunning: false,
     onsetData: {
         isPeak: false,
@@ -19,6 +21,11 @@ const initialState = {
 
 export default function onsetDetection(state = initialState, action = {}) {
     switch (action.type) {
+        case SET_ONSET_GRAPH_SCALE:
+            return {
+                ...state,
+                graphScale: action.graphScale
+            }
         case SET_ONSET_DETECTION_RUNNING:
             return {
                 ...state,

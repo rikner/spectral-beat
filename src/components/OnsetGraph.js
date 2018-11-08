@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-const onsetScale = 10000;
-
 const propTypes = {
     canvasHeight: PropTypes.number.isRequired,
     canvasWidth: PropTypes.number.isRequired,
+    graphScale: PropTypes.number.isRequired,
     onsetData: PropTypes.shape({
         isPeak: PropTypes.bool.isRequired,
         threshold: PropTypes.number.isRequired,
@@ -15,6 +14,7 @@ const propTypes = {
 };
 
 const mapStateToProps = state => ({
+    graphScale: state.onsetDetection.graphScale,
     onsetData: state.onsetDetection.onsetData,
 });
 
@@ -84,7 +84,7 @@ class OnsetGraph extends Component {
     }
 
     drawCanvas = () => {
-        const { canvasHeight, canvasWidth } = this.props;
+        const { canvasHeight, canvasWidth, graphScale } = this.props;
 
         const onsetCanvasCtx = this.canvas.getContext("2d");
 
@@ -98,12 +98,12 @@ class OnsetGraph extends Component {
 
         onsetCanvasCtx.fillStyle = "blue";
         this.thresholdValues.forEach((value, i) => {
-            onsetCanvasCtx.fillRect(i, canvasHeight, 1, -value * onsetScale);
+            onsetCanvasCtx.fillRect(i, canvasHeight, 1, -value * graphScale);
         })
 
         onsetCanvasCtx.fillStyle = "white";
         this.onsetValues.forEach((value, i) => {
-            onsetCanvasCtx.fillRect(i, canvasHeight, 1, -value * onsetScale);
+            onsetCanvasCtx.fillRect(i, canvasHeight, 1, -value * graphScale);
         })
 
         onsetCanvasCtx.fillStyle = "grey";
