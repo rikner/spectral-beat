@@ -28,7 +28,7 @@ class ControlPanel extends Component {
                 />
 
                 <ControlButton
-                    label='Settings'
+                    label='Graph'
                     onClick={onClickSettings}
                 />
             </div>
