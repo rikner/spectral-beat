@@ -7,6 +7,7 @@ import 'rc-slider/assets/index.css';
 import * as actions from '../actions';
 
 const propTypes = {
+    height: PropTypes.number.isRequired,
     onsetGraphScale: PropTypes.number.isRequired,
     setOnsetGraphScale: PropTypes.func.isRequired,
 };
@@ -22,27 +23,24 @@ const mapDispatchToProps = {
 
 class OnsetScaler extends Component {
     render() {
-        const { graphScale, setOnsetGraphScale } = this.props;
+        const { graphScale, setOnsetGraphScale, height } = this.props;
 
         return (
-
-                <Slider
-                    min={100}
-                    max={10000000}
-                    step={0.00001}
-                    onChange={(value) => {
-                        setOnsetGraphScale(value);
-                    }}
-                    vertical
-                    style={{
-                        alignItems: 'stretch',
-                        backgroundColor: 'red',
-                        display: 'flex',
-                        height: 300,
-                        width: 20,
-                    }}
-                />
-
+            <Slider
+                min={100}
+                max={1000000}
+                step={0.00001}
+                onChange={(value) => {
+                    setOnsetGraphScale(value);
+                }}
+                vertical
+                style={{
+                    alignItems: 'stretch',
+                    display: 'flex',
+                    height: height,
+                    paddingRight: '2em',
+                }}
+            />
         )
     }
 }
