@@ -9,7 +9,8 @@ import withSizes from 'react-sizes'
 class SettingsOverlay extends Component {
     render() {
         const { windowWidth, windowHeight } = this.props;
-
+        const canvasHeight = Math.round(windowHeight / 3);
+        const canvasWidth = Math.round(windowWidth / 2);
         return (
             <div style={{
                 alignItems: 'center',
@@ -18,11 +19,12 @@ class SettingsOverlay extends Component {
                 justifyContent: 'center',
                 marginBottom: '1em'
             }}>
+                {/* <OnsetScaler height={canvasHeight} /> */}
                 <OnsetGraph
-                    canvasHeight={Math.round(windowHeight / 3)}
-                    canvasWidth={Math.round(windowWidth / 2)}
+                    canvasHeight={canvasHeight}
+                    canvasWidth={canvasWidth}
                 />
-                <OnsetScaler />
+                {/* <ThresholdController /> */}
             </div>
         );
     }
