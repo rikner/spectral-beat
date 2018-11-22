@@ -17,17 +17,14 @@ class WebAudioEngine {
 		this.audioContext = new AudioContext();
 		this.bufferSize = bufferSize;
 		
-		navigator.mediaDevices.enumerateDevices()
-		.then(console.log);
-
-		navigator.mediaDevices
-		.getUserMedia({ audio: true })
-		.then(mediaStream => {
-			this.micStream = mediaStream;
-			this.inputNode = this.audioContext.createMediaStreamSource(this.micStream);
-		})
-		.catch(reason => {
-			console.error(reason);
+		crossBrowserGetUserUserMedia({
+			onError: console.error,
+			onSuccess: (mediaStream: MediaStream) => {
+				console.log("mediastream sunccess")
+				this.micStream = mediaStream;
+				this.inputNode = this.audioContext.createMediaStreamSource(this.micStream);
+			},
+			options: { audio: true },
 		});
 		
 		// filter
@@ -55,12 +52,10 @@ class WebAudioEngine {
 		if (!this.inputNode) {
 			return;
 		}
-		this.inputNode
-		// .connect(this.filterNode)
-		.connect(this.analyserNode)
-		.connect(this.processingNode)
-		.connect(this.gainNode)
-		.connect(this.audioContext.destination);
+		this.inputNode.connect(this.analyserNode);
+		this.analyserNode.connect(this.processingNode);
+		this.processingNode.connect(this.gainNode);
+		this.gainNode.connect(this.audioContext.destination);
 	}
 	
 	public stop(): void {
@@ -76,6 +71,7 @@ class WebAudioEngine {
 	private audioProcessingCallback = (audioProcessingEvent: AudioProcessingEvent) => {
 		const dataArray = new Float32Array(this.analyserNode.frequencyBinCount);
 		void this.analyserNode.getFloatTimeDomainData(dataArray);
+		console.log(dataArray);
 
 		if (this.onFloatFrequencyData) {
 			this.onFloatFrequencyData(dataArray);
@@ -84,3 +80,19 @@ class WebAudioEngine {
 }
 
 export default WebAudioEngine;
+
+
+function crossBrowserGetUserUserMedia({ onSuccess, onError, options }: {
+	onSuccess: NavigatorUserMediaSuccessCallback, 
+	onError: NavigatorUserMediaErrorCallback,
+	options: MediaStreamConstraints
+}) : void {
+	if (typeof navigator.mediaDevices.getUserMedia === "function") {
+		console.log("using mediaDevices.getUsermedia")
+		navigator.mediaDevices.getUserMedia(options)
+		.then(onSuccess)
+		.catch(onError)
+	} else {
+		navigator.getUserMedia(options, onSuccess, onError)
+	}
+}
