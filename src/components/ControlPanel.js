@@ -18,19 +18,20 @@ class ControlPanel extends Component {
                     display: 'flex',
                     flexDirection: 'row',
                     justifyContent: 'space-around',
-                    marginTop: '1em',
+                    margin: '1em',
                     position: 'relative',
                 }}
             >
+                <ControlButton
+                    label='Graph'
+                    onClick={onClickSettings}
+                />
+
                 <ControlButton
                     label={isRunning ? "Stop" : "Start"}
                     onClick={() => onClickStartStop(!isRunning) }
                 />
 
-                <ControlButton
-                    label='Graph'
-                    onClick={onClickSettings}
-                />
             </div>
         );
     }
