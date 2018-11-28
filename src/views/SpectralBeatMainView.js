@@ -20,7 +20,7 @@ class SpectralBeatMainView extends Component {
             >
                 <div style={styles.fullscreenButtonWrapper}>
                     <img
-                        src={window.location.origin + '/fullscreen.png'}
+                        src={'fullscreen.png'}
                         style={styles.fullscreenButton}
                         onClick={() => {
                             if (document.webkitIsFullScreen) {
@@ -58,7 +58,6 @@ const styles = {
         width: "3em",
     },
     fullscreenButtonWrapper: {
-        // backgroundColor: 'red',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-end'
