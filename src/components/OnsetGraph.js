@@ -88,11 +88,8 @@ class OnsetGraph extends Component {
 
         const onsetCanvasCtx = this.canvas.getContext("2d");
 
-        const backgroundGradient = onsetCanvasCtx.createLinearGradient(0, 0, 0, 170);
-        backgroundGradient.addColorStop(0, "blue");
-        backgroundGradient.addColorStop(1, "black");
 
-        onsetCanvasCtx.fillStyle = backgroundGradient;
+        onsetCanvasCtx.fillStyle = "grey";
         onsetCanvasCtx.fillRect(0, 0, canvasWidth, canvasHeight);
 
 
@@ -106,7 +103,7 @@ class OnsetGraph extends Component {
             onsetCanvasCtx.fillRect(i, canvasHeight, 1, -value * graphScale);
         })
 
-        onsetCanvasCtx.fillStyle = "grey";
+        onsetCanvasCtx.fillStyle = "black";
         this.peakValues.forEach((value, i) => {
             if (value === true) {
                 onsetCanvasCtx.fillRect(i, canvasHeight, 1, -canvasHeight);
