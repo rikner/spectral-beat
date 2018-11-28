@@ -9,7 +9,7 @@ import {
 
 const initialState = {
     autoThresholdIsActive: true,
-    graphScale: 10000,
+    graphScale: 10000000,
     isRunning: false,
     onsetData: {
         isPeak: false,
