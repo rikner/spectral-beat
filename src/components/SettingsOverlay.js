@@ -10,7 +10,7 @@ class SettingsOverlay extends Component {
     render() {
         const { windowWidth, windowHeight } = this.props;
         const canvasHeight = Math.round(windowHeight / 3);
-        const canvasWidth = Math.round(windowWidth / 2);
+        const canvasWidth = Math.round(windowWidth);
         return (
             <div style={{
                 alignItems: 'center',
