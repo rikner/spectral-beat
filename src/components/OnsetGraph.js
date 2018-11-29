@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import * as actions from '../actions';
 
 const propTypes = {
     canvasHeight: PropTypes.number.isRequired,
@@ -11,12 +12,17 @@ const propTypes = {
         threshold: PropTypes.number.isRequired,
         value: PropTypes.number.isRequired,
     }).isRequired,
+    setOnsetGraphScale: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
     graphScale: state.onsetDetection.graphScale,
     onsetData: state.onsetDetection.onsetData,
 });
+
+const mapDispatchToProps = {
+    setOnsetGraphScale: actions.setOnsetGraphScale,
+};
 
 class OnsetGraph extends Component {
     constructor(props) {
@@ -72,6 +78,13 @@ class OnsetGraph extends Component {
         if (!this.frameId) {
             this.frameId = window.requestAnimationFrame(this.loop);
         }
+        if (!this.scalingTimer) {
+            this.scalingTimer = setInterval(() => {
+                const maxValue = Math.max(...this.onsetValues);
+                const newGraphScale = this.props.canvasHeight / maxValue;
+                this.props.setOnsetGraphScale(newGraphScale);
+            }, 2500);
+        }
     }
 
     loop = () => {
@@ -81,6 +94,7 @@ class OnsetGraph extends Component {
 
     stopLoop = () => {
         window.cancelAnimationFrame(this.frameId);
+        clearInterval(this.scalingTimer);
     }
 
     drawCanvas = () => {
@@ -133,4 +147,4 @@ class OnsetGraph extends Component {
 
 OnsetGraph.propTypes = propTypes;
 
-export default connect(mapStateToProps)(OnsetGraph);
+export default connect(mapStateToProps, mapDispatchToProps)(OnsetGraph);
