@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import OnsetDetection from '../lib/OnsetDetection';
-import getRandomColor from '../lib/helpers';
+import { getRandomColor } from '../lib/helpers';
 import ControlPanel from '../components/ControlPanel';
 
 import * as actions from "../actions";

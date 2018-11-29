@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import SettingsOverlay from '../components/SettingsOverlay';
 import OnsetDetectionController from '../components/OnsetDetectionController';
 import * as actions from '../actions';
+import { toggleFullScreen } from '../lib/helpers';
 
 class SpectralBeatMainView extends Component {
     constructor(props) {
@@ -22,13 +23,7 @@ class SpectralBeatMainView extends Component {
                     <img
                         src={'fullscreen.png'}
                         style={styles.fullscreenButton}
-                        onClick={() => {
-                            if (document.webkitIsFullScreen) {
-                                document.webkitExitFullscreen()
-                            } else {
-                                this.mainView.current.webkitRequestFullscreen();
-                            }
-                        }}
+                        onClick={toggleFullScreen}
                     />
                 </div>
 
