@@ -74,8 +74,7 @@ class WebAudioEngine {
 
 	private audioProcessingCallback = (audioProcessingEvent: AudioProcessingEvent) => {
 		const dataArray = new Float32Array(this.analyserNode.frequencyBinCount);
-		void this.analyserNode.getFloatTimeDomainData(dataArray);
-		// console.log(dataArray);
+		void this.analyserNode.getFloatFrequencyData(dataArray);
 
 		if (this.onFloatFrequencyData) {
 			this.onFloatFrequencyData(dataArray);

@@ -48,12 +48,17 @@ class OnsetDetection {
 			console.error("previous and current spectrum don't have the same length");
 			return;
 		}
+
+		const linearSpectrum = spectrum.map(value => {
+			const exponent = value / 20;
+			return Math.pow(10, exponent)
+		});
 		
 		const flux = computeSpectralFlux(
 			this.previousSpectrum,
-			spectrum.subarray(0)
+			linearSpectrum
 		);
-		this.previousSpectrum.set(spectrum);
+		this.previousSpectrum.set(linearSpectrum);
 		this.onsetValues.shift();
 		this.onsetValues.push(flux);
 		
