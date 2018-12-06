@@ -102,7 +102,7 @@ const computeSpectralFlux = (previousSpectrum: Float32Array, spectrum: Float32Ar
 const calculateThreshold = (arr: number[]): number => {
 	const meanValue = mean(arr);
 	const medianValue = median(arr);
-	return meanValue + medianValue;
+	return (meanValue + medianValue) / 2;
 };
 
 const checkForRecentPeak = (arr: number[], threshold: number) => {

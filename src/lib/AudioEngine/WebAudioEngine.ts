@@ -22,6 +22,7 @@ class WebAudioEngine {
 
 		// fft
 		this.analyserNode = this.audioContext.createAnalyser();
+		this.analyserNode.smoothingTimeConstant = 0.8;
 
 		// processing
 		this.processingNode = this.audioContext.createScriptProcessor(this.bufferSize, 1, 1);
