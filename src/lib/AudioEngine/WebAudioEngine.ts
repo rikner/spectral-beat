@@ -47,10 +47,13 @@ class WebAudioEngine {
 			})
 			.catch(console.error);
 		}
+		this.audioContext.resume();
 	}
 
 	public stop(): void {
 		this.disconnect();
+		this.inputNode = null; // safari workaround
+		this.audioContext.suspend();
 	}
 
 	private connect(): void {
