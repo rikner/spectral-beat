@@ -1,4 +1,10 @@
 class WebAudioEngine {
+	private static mediaStreamConstraints: MediaStreamConstraints = {
+		audio: {
+			echoCancellation: false
+		}
+	}
+
 	public onFloatFrequencyData: ((data: Float32Array) => void) | null = null;
 
 	private audioContext: AudioContext;
@@ -40,7 +46,8 @@ class WebAudioEngine {
 		if (this.inputNode) {
 			this.connect();
 		} else {
-			navigator.mediaDevices.getUserMedia({ audio: true })
+			const constraints = WebAudioEngine.mediaStreamConstraints
+			navigator.mediaDevices.getUserMedia(constraints)
 			.then((mediaStream: MediaStream) => {
 				this.inputNode = this.audioContext.createMediaStreamSource(mediaStream);
 				this.connect();
