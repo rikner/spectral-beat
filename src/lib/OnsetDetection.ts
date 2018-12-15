@@ -7,12 +7,10 @@ interface IOnsetResultData {
 }
 
 class OnsetDetection {
-	private static bufferSize: number = 512;
-	
 	public onProcessCallbacks: Array<(data: IOnsetResultData) => void> = [];
 	public onOnsetDetected: (() => void) | null = null;
 	
-	private audioEngine = new WebAudioEngine(OnsetDetection.bufferSize);
+	private audioEngine = new WebAudioEngine();
 	private previousSpectrum = new Float32Array(this.audioEngine.frequencyBinCount);
 	private onsetValues: number[];
 	private shouldCalculateThreshold: boolean = true;
@@ -102,7 +100,7 @@ const computeSpectralFlux = (previousSpectrum: Float32Array, spectrum: Float32Ar
 const calculateThreshold = (arr: number[]): number => {
 	const meanValue = mean(arr);
 	const medianValue = median(arr);
-	return meanValue + medianValue;
+	return (meanValue + medianValue) / 2;
 };
 
 const checkForRecentPeak = (arr: number[], threshold: number) => {

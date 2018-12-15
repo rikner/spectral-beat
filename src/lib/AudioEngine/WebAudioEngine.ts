@@ -14,12 +14,10 @@ class WebAudioEngine {
 	private analyserNode: AnalyserNode;
 	private processingNode: ScriptProcessorNode;
 	private gainNode: GainNode;
-	private bufferSize: number;
 
-	constructor(bufferSize: number) {
+	constructor() {
 		const AudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
 		this.audioContext = new AudioContext();
-		this.bufferSize = bufferSize;
 
 		// filter
 		this.filterNode = this.audioContext.createBiquadFilter();
@@ -30,7 +28,7 @@ class WebAudioEngine {
 		this.analyserNode = this.audioContext.createAnalyser();
 
 		// processing
-		this.processingNode = this.audioContext.createScriptProcessor(this.bufferSize, 1, 1);
+		this.processingNode = this.audioContext.createScriptProcessor();
 		this.processingNode.onaudioprocess = this.audioProcessingCallback;
 
 		// gain
