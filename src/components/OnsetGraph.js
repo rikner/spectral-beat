@@ -32,15 +32,9 @@ class OnsetGraph extends Component {
     }
 
     createDataArrays(length) {
-        this.onsetValues = new Array(length);
-        this.thresholdValues = new Array(length);
-        this.peakValues = new Array(length);
-
-        for (let i = 0; i < length; i++) {
-            this.onsetValues[i] = 0;
-            this.thresholdValues[i] = 0;
-            this.peakValues[i] = false;
-        }
+        this.onsetValues = Array.from({ length }, _ => 0);
+        this.thresholdValues = Array.from({ length }, _ => 0);
+        this.peakValues = Array.from({ length }, _ => false);
     }
 
     componentDidMount = () => {
@@ -99,13 +93,10 @@ class OnsetGraph extends Component {
 
     drawCanvas = () => {
         const { canvasHeight, canvasWidth, graphScale } = this.props;
-
         const onsetCanvasCtx = this.canvas.getContext("2d");
-
 
         onsetCanvasCtx.fillStyle = "grey";
         onsetCanvasCtx.fillRect(0, 0, canvasWidth, canvasHeight);
-
 
         onsetCanvasCtx.fillStyle = "blue";
         this.thresholdValues.forEach((value, i) => {
