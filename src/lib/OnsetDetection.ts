@@ -14,26 +14,19 @@ class OnsetDetection {
 	
 	private audioEngine = new WebAudioEngine(OnsetDetection.bufferSize);
 	private previousSpectrum = new Float32Array(this.audioEngine.frequencyBinCount);
-	private onsetValues: number[];
+	private onsetValues: number[] = Array.from({ length: 100 }, _ => 0);
 	private shouldCalculateThreshold: boolean = true;
 	private threshold: number = 0;
-	
-	constructor() {
-		this.onsetValues = new Array(100);
-		for (let i = 0; i < this.onsetValues.length; i++) {
-			this.onsetValues[i] = 0;
-		}
-	}
-	
+
 	public startAudioProcessing() {
 		this.audioEngine.onFloatFrequencyData = this.run;
 		this.audioEngine.start();
 	}
-	
+
 	public stopAudioProcessing() {
 		this.audioEngine.stop();
 	}
-	
+
 	public setThreshold(value: number | null) {
 		if (value != null) {
 			this.threshold = value;
@@ -53,7 +46,7 @@ class OnsetDetection {
 			const exponent = value / 20;
 			return Math.pow(10, exponent)
 		});
-		
+
 		const flux = computeSpectralFlux(
 			this.previousSpectrum,
 			linearSpectrum
@@ -61,11 +54,11 @@ class OnsetDetection {
 		this.previousSpectrum.set(linearSpectrum);
 		this.onsetValues.shift();
 		this.onsetValues.push(flux);
-		
+
 		if (this.shouldCalculateThreshold) {
 			this.threshold = calculateThreshold(this.onsetValues.slice());
 		}
-		
+
 		const currentIsPeak = checkForRecentPeak(
 			this.onsetValues.slice(),
 			this.threshold
@@ -75,7 +68,7 @@ class OnsetDetection {
 				this.onOnsetDetected(timeStamp);
 			}
 		}
-		
+
 		this.onProcessCallbacks.forEach(onProcess => {
 			onProcess({
 				isPeak: currentIsPeak,
@@ -95,7 +88,7 @@ const computeSpectralFlux = (previousSpectrum: Float32Array, spectrum: Float32Ar
 		diff *= diff;
 		return prev + diff;
 	}, 0);
-	
+
 	return Math.sqrt(flux) / spectrum.length;
 };
 
@@ -107,8 +100,8 @@ const calculateThreshold = (arr: number[]): number => {
 
 const checkForRecentPeak = (arr: number[], threshold: number) => {
 	const isLocalMaximum =
-	arr[arr.length - 3] < arr[arr.length - 2] &&
-	arr[arr.length - 2] > arr[arr.length - 1];
+		arr[arr.length - 3] < arr[arr.length - 2] &&
+		arr[arr.length - 2] > arr[arr.length - 1];
 	const isAboveThreshold = arr[arr.length - 2] > threshold;
 	return isLocalMaximum && isAboveThreshold;
 };
@@ -121,7 +114,7 @@ const mean = (numArray: number[]) => {
 const median = (numArray: number[]) => {
 	const sortedNumArray = numArray.slice().sort((a, b) => a - b);
 	const half = Math.floor(sortedNumArray.length / 2);
-	
+
 	if (sortedNumArray.length & 1) {
 		return sortedNumArray[half];
 	}
