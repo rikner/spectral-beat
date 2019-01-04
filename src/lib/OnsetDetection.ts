@@ -10,7 +10,7 @@ class OnsetDetection {
 	private static bufferSize: number = 512;
 	
 	public onProcessCallbacks: Array<(data: IOnsetResultData) => void> = [];
-	public onOnsetDetected: (() => void) | null = null;
+	public onOnsetDetected: ((timeStamp: number) => void) | null = null;
 	
 	private audioEngine = new WebAudioEngine(OnsetDetection.bufferSize);
 	private previousSpectrum = new Float32Array(this.audioEngine.frequencyBinCount);
@@ -43,7 +43,7 @@ class OnsetDetection {
 		}
 	}
 	
-	private run = (spectrum: Float32Array) => {
+	private run = (spectrum: Float32Array, timeStamp: number) => {
 		if (spectrum.length !== this.previousSpectrum.length) {
 			console.error("previous and current spectrum don't have the same length");
 			return;
@@ -72,7 +72,7 @@ class OnsetDetection {
 		);
 		if (currentIsPeak) {
 			if (this.onOnsetDetected != null) {
-				this.onOnsetDetected();
+				this.onOnsetDetected(timeStamp);
 			}
 		}
 		

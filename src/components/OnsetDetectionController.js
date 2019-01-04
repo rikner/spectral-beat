@@ -49,7 +49,7 @@ class OnsetDetectionController extends Component {
     }
 
     componentDidMount() {
-        this.onsetDetection.onOnsetDetected = this.props.setNewRandomColor;
+        this.onsetDetection.onOnsetDetected = createOnsetDetectedCallback(this.props.setNewRandomColor);
         this.onsetDetection.onProcessCallbacks.push((onsetData) => {
             this.props.setOnsetData(onsetData);
         });
@@ -90,6 +90,19 @@ class OnsetDetectionController extends Component {
 }
 
 OnsetDetectionController.propTypes = propTypes;
+
+// tslint:disable:no-console
+
+
+const createOnsetDetectedCallback = (callback) => {
+    let lastDetectionTimeStamp = 0;
+    return function(timeStamp) {
+        if ((timeStamp - lastDetectionTimeStamp) >= 75) {
+            callback();
+        }
+        lastDetectionTimeStamp = timeStamp;
+    }
+}
 
 export default connect(
     mapStateToProps,

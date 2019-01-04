@@ -5,7 +5,7 @@ class WebAudioEngine {
 		}
 	}
 
-	public onFloatFrequencyData: ((data: Float32Array) => void) | null = null;
+	public onFloatFrequencyData: ((data: Float32Array, timeStamp: number) => void) | null = null;
 
 	private audioContext: AudioContext;
 
@@ -87,7 +87,7 @@ class WebAudioEngine {
 		void this.analyserNode.getFloatFrequencyData(dataArray);
 
 		if (this.onFloatFrequencyData) {
-			this.onFloatFrequencyData(dataArray);
+			this.onFloatFrequencyData(dataArray, audioProcessingEvent.timeStamp);
 		}
 	};
 }
