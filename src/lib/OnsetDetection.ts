@@ -7,7 +7,7 @@ interface IOnsetResultData {
 }
 
 class OnsetDetection {
-	private static bufferSize: number = 512;
+	private static bufferSize: number = 256;
 	
 	public onProcessCallbacks: Array<(data: IOnsetResultData) => void> = [];
 	public onOnsetDetected: ((timeStamp: number) => void) | null = null;
