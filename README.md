@@ -1,3 +1,5 @@
+Try out: https://rikner.github.io/spectral-beat/
+
 # ColorFlux a.k.a. SpectralBeat
 A web app built with react, redux, WebAudio, getUserMedia and TypeScript.
 It analyzes the audio signal of your microphone and shows pretty colors :-)
