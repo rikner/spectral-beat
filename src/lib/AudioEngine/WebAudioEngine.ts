@@ -17,8 +17,11 @@ class WebAudioEngine {
 	private bufferSize: number;
 
 	constructor(bufferSize: number) {
+		const options: AudioContextOptions = {
+			latencyHint: "interactive"
+		}
 		const AudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
-		this.audioContext = new AudioContext();
+		this.audioContext = new AudioContext(options);
 		this.bufferSize = bufferSize;
 
 		// filter
