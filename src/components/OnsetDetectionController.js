@@ -49,7 +49,7 @@ class OnsetDetectionController extends Component {
     }
 
     componentDidMount() {
-        this.onsetDetection.onOnsetDetected = createOnsetDetectedCallback(this.props.setNewRandomColor);
+        this.onsetDetection.onOnsetDetected = withRefractoryTime(this.props.setNewRandomColor);
         this.onsetDetection.onProcessCallbacks.push((onsetData) => {
             this.props.setOnsetData(onsetData);
         });
@@ -94,10 +94,11 @@ OnsetDetectionController.propTypes = propTypes;
 // tslint:disable:no-console
 
 
-const createOnsetDetectedCallback = (callback) => {
+function withRefractoryTime(callback) {
+    const REFRACTORY_TIME_MS = 75;
     let lastDetectionTimeStamp = 0;
     return function(timeStamp) {
-        if ((timeStamp - lastDetectionTimeStamp) >= 75) {
+        if ((timeStamp - lastDetectionTimeStamp) >= REFRACTORY_TIME_MS) {
             callback();
         }
         lastDetectionTimeStamp = timeStamp;
