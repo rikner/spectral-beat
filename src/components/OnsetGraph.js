@@ -45,14 +45,12 @@ class OnsetGraph extends Component {
         this.stopLoop();
     };
 
-    componentDidUpdate = (prevProps) => {
-        const { onsetData, canvasWidth } = this.props
+    shouldComponentUpdate = (nextProps, nextState) => {
+        const { onsetData, canvasWidth } = nextProps;
 
-        if (prevProps.canvasWidth !== canvasWidth) {
-            // XXX: there might a better solution than creating new ararys
-            // everytime the width changes, but I guess it's allright for now
-            // since one doesn't resize it all the time
+        if (this.props.canvasWidth !== canvasWidth) {
             this.createDataArrays(canvasWidth);
+            return true;
         }
 
         const { value, threshold, isPeak } = onsetData;
@@ -66,7 +64,8 @@ class OnsetGraph extends Component {
         this.peakValues.shift();
         this.peakValues.push(onsetData.isPeak);
 
-    }
+        return false;
+    };
 
     startLoop = () => {
         if (!this.frameId) {
@@ -101,19 +100,19 @@ class OnsetGraph extends Component {
         onsetCanvasCtx.fillStyle = "blue";
         this.thresholdValues.forEach((value, i) => {
             onsetCanvasCtx.fillRect(i, canvasHeight, 1, -value * graphScale);
-        })
+        });
 
         onsetCanvasCtx.fillStyle = "white";
         this.onsetValues.forEach((value, i) => {
             onsetCanvasCtx.fillRect(i, canvasHeight, 1, -value * graphScale);
-        })
+        });
 
         onsetCanvasCtx.fillStyle = "black";
         this.peakValues.forEach((value, i) => {
             if (value === true) {
                 onsetCanvasCtx.fillRect(i, canvasHeight, 1, -canvasHeight);
             }
-        })
+        });
     }
 
     render() {
