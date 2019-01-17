@@ -7,16 +7,28 @@ import OnsetDetectionController from '../components/OnsetDetectionController';
 import * as actions from '../actions';
 import { toggleFullScreen } from '../lib/helpers';
 
+
+const propTypes = {
+    setSettingsVisibility: PropTypes.func.isRequired,
+    settingsAreVisible: PropTypes.bool.isRequired,
+};
+
+const mapStateToProps = ({ canvas, settings }) => ({
+    backgroundColor: canvas.currentColor,
+    settingsAreVisible: settings.settingsAreVisible,
+});
+
+const mapDispatchToProps = dispatch => ({
+    setSettingsVisibility: (visible) => {
+        dispatch(actions.setSettingsVisibility(visible));
+    },
+});
+
 class SpectralBeatMainView extends Component {
-    constructor(props) {
-        super(props);
-        this.mainView = React.createRef();
-    }
     render() {
         const { settingsAreVisible, backgroundColor } =  this.props;
         return (
             <div 
-                ref={this.mainView}
                 style={{ backgroundColor, ...styles.main }}
             >
                 <div style={styles.fullscreenButtonWrapper}>
@@ -41,6 +53,8 @@ class SpectralBeatMainView extends Component {
         )
     }
 }
+
+SpectralBeatMainView.propTypes = propTypes;
 
 const styles = {
     controllerContainer: {
@@ -76,21 +90,6 @@ const styles = {
     },
 }
 
-SpectralBeatMainView.propTypes = {
-    setSettingsVisibility: PropTypes.func.isRequired,
-    settingsAreVisible: PropTypes.bool.isRequired,
-};
-
-const mapStateToProps = ({ canvas, settings }) => ({
-    backgroundColor: canvas.currentColor,
-    settingsAreVisible: settings.settingsAreVisible,
-});
-
-const mapDispatchToProps = dispatch => ({
-    setSettingsVisibility: (visible) => {
-        dispatch(actions.setSettingsVisibility(visible));
-    },
-});
 
 export default connect(
     mapStateToProps,
