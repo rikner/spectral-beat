@@ -55,20 +55,20 @@ class OnsetDetectionController extends Component {
         });
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.onsetDetectionIsRunning !== this.props.onsetDetectionIsRunning) {
-            if (nextProps.onsetDetectionIsRunning) {
+    componentDidUpdate(prevProps) {
+        if (prevProps.onsetDetectionIsRunning !== this.props.onsetDetectionIsRunning) {
+            if (this.props.onsetDetectionIsRunning) {
                 this.onsetDetection.startAudioProcessing();
             } else {
                 this.onsetDetection.stopAudioProcessing();
             }
         }
-        if (nextProps.autoThresholdIsActive !== this.props.autoThresholdIsActive) {
-            this.onsetDetection.shouldCalculateThreshold = nextProps.autoThresholdIsActive;
+        if (prevProps.autoThresholdIsActive !== this.props.autoThresholdIsActive) {
+            this.onsetDetection.shouldCalculateThreshold = this.props.autoThresholdIsActive;
         }
 
-        if (nextProps.userThreshold !== this.props.userThreshold) {
-            this.onsetDetection.setThreshold(nextProps.userThreshold);
+        if (prevProps.userThreshold !== this.props.userThreshold) {
+            this.onsetDetection.setThreshold(this.props.userThreshold);
         }
     }
 
