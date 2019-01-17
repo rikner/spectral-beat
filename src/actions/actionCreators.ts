@@ -1,3 +1,4 @@
+import { IOnsetData } from '../reducers/onset'; 
 import ActionTypes from './actionTypes';
 
 const { 
@@ -35,7 +36,7 @@ export const setOnsetDetectionRunning = (isRunning: boolean) => ({
 	type: SET_ONSET_DETECTION_RUNNING,
 });
 
-export const setOnsetData = (onsetData: any) => ({
+export const setOnsetData = (onsetData: IOnsetData) => ({
 	onsetData,
 	type: SET_ONSET_DATA,
 });

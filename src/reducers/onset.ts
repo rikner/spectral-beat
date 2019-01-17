@@ -9,15 +9,18 @@ const {
 	TOGGLE_ONSET_DETECTION_RUNNING
 } = ActionTypes;
 
+// ToDo: move to appropriate file
+export interface IOnsetData {
+	isPeak: boolean
+	threshold: number
+	value: number
+}
+
 interface IOnsetState {
 	autoThresholdIsActive: boolean
 	graphScale: number
 	isRunning: boolean
-	onsetData: {
-		isPeak: boolean
-		threshold: number
-		value: number
-	}
+	onsetData: IOnsetData
 	userThreshold: number
 }
 
