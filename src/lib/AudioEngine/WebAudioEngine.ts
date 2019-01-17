@@ -1,7 +1,10 @@
 class WebAudioEngine {
+
+	// https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints
 	private static mediaStreamConstraints: MediaStreamConstraints = {
 		audio: {
-			echoCancellation: false
+			echoCancellation: false,
+			// noiseSuppression: false
 		}
 	}
 
