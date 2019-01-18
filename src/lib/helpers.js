@@ -29,8 +29,12 @@ export function toggleFullScreen() {
         || doc.msFullscreenElement
 
     if (!fullscreenElement) {
-        requestFullScreen.call(docEl);
+        if (requestFullScreen) {
+            requestFullScreen.call(docEl);
+        }
     } else {
-        cancelFullScreen.call(document);
+        if (cancelFullScreen) {
+            cancelFullScreen.call(document);
+        }
     }
 }
