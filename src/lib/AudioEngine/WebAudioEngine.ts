@@ -1,10 +1,10 @@
 class WebAudioEngine {
 
 	// https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints
-	private static mediaStreamConstraints: MediaStreamConstraints = {
+	private static mediaStreamConstraints: any = {
 		audio: {
 			echoCancellation: false,
-			// noiseSuppression: false
+			noiseSuppression: false
 		}
 	}
 
@@ -23,8 +23,8 @@ class WebAudioEngine {
 		const options: AudioContextOptions = {
 			latencyHint: "interactive"
 		}
-		const AudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
-		this.audioContext = new AudioContext(options);
+		const CrossBrowserAudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
+		this.audioContext = new CrossBrowserAudioContext(options);
 		this.bufferSize = bufferSize;
 
 		// filter
@@ -48,7 +48,7 @@ class WebAudioEngine {
 		return this.analyserNode.frequencyBinCount;
 	}
 
-	public start(): void {
+	public start() {
 		if (this.inputNode) {
 			this.connect();
 		} else {
@@ -63,13 +63,13 @@ class WebAudioEngine {
 		this.audioContext.resume();
 	}
 
-	public stop(): void {
+	public stop() {
 		this.disconnect();
 		this.inputNode = null; // safari workaround
 		this.audioContext.suspend();
 	}
 
-	private connect(): void {
+	private connect() {
 		if (this.inputNode) {
 			this.inputNode.connect(this.analyserNode);
 		}
@@ -78,7 +78,7 @@ class WebAudioEngine {
 		this.gainNode.connect(this.audioContext.destination);
 	}
 
-	private disconnect(): void {
+	private disconnect() {
 		if (this.inputNode) {
 			this.inputNode.disconnect();
 		}
