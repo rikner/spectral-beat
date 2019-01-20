@@ -14,7 +14,7 @@ class WebAudioEngine {
 	public onFloatFrequencyData: ((data: Float32Array, timeStamp: number) => void) | null = null;
 
 	private audioContext: AudioContext;
-	private inputNode: AudioBufferSourceNode;
+	private inputNode: MediaStreamAudioSourceNode;
 	private analyserNode: AnalyserNode;
 	private processingNode: ScriptProcessorNode;
 	private gainNode: GainNode;
@@ -26,7 +26,7 @@ class WebAudioEngine {
 		const CrossBrowserAudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
 		this.audioContext = new CrossBrowserAudioContext(options);
 
-		createBufferSource(this.audioContext, "Scratch That.mp3")
+		createStreamSource(this.audioContext)
 		.then(sourceNode => {
 			this.inputNode = sourceNode
 		})
@@ -42,11 +42,11 @@ class WebAudioEngine {
 	public start() {
 		this.audioContext.resume();
 		this.connect();
-		this.inputNode.start();
+		// this.inputNode.start();
 	}
 
 	public stop() {
-		this.inputNode.stop();
+		// this.inputNode.stop();
 		this.disconnect();
 		this.audioContext.suspend();
 	}
