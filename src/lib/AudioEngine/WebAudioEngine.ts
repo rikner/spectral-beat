@@ -27,9 +27,8 @@ class WebAudioEngine {
 		this.audioContext = new CrossBrowserAudioContext(options);
 
 		createStreamSource(this.audioContext)
-		.then(sourceNode => { 
-			this.inputNode = sourceNode
-		})
+		.then(sourceNode => this.inputNode = sourceNode)
+
 		this.analyserNode = this.audioContext.createAnalyser();
 		
 		this.processingNode = this.audioContext.createScriptProcessor(targetBufferSize);
@@ -53,8 +52,11 @@ class WebAudioEngine {
 	}
 
 	private connect() {
-		if (this.inputNode) { this.inputNode.connect(this.analyserNode); }
-		this.analyserNode.connect(this.processingNode);
+		if (this.inputNode) { 
+			this.inputNode.connect(this.gainNode);
+			this.inputNode.connect(this.analyserNode);
+			this.inputNode.connect(this.processingNode);
+		}
 		this.processingNode.connect(this.gainNode);
 		this.gainNode.connect(this.audioContext.destination);
 	}
@@ -72,16 +74,6 @@ class WebAudioEngine {
 
 		if (this.onFloatFrequencyData) {
 			this.onFloatFrequencyData(dataArray, audioProcessingEvent.timeStamp);
-		}
-
-		const inputBuffer = audioProcessingEvent.inputBuffer;
-		const outputBuffer = audioProcessingEvent.outputBuffer;
-
-		// Loop through the output channels (in this case there is only one)
-		for (let channel = 0; channel < outputBuffer.numberOfChannels; channel++) {
-			const inputData = inputBuffer.getChannelData(channel);
-			const outputData = outputBuffer.getChannelData(channel);
-			outputData.set(inputData);
 		}
 	};
 }
