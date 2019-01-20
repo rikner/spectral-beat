@@ -8,18 +8,18 @@ interface IOnsetResultData {
 
 class OnsetDetection {
 	private static desiredBufferSize: number | undefined = 512;
-	private static onsetBufferDurationS = 2.5
+	private static onsetBufferDurationS = 2.5;
 	
-	public onProcessCallbacks: Array<(data: IOnsetResultData) => void> = [];
+	public onOnsetResultData: ((data: IOnsetResultData) => void) | null = null;
 	public onOnsetDetected: ((timeStamp: number) => void) | null = null;
 	
 	private audioEngine = new WebAudioEngine(OnsetDetection.desiredBufferSize);
 	private previousSpectrum = new Float32Array(this.audioEngine.frequencyBinCount);
-	private onsetValues: number[] = (() => {
+	private onsetValues: Float32Array = (() => {
 		const { bufferSize, sampleRate } = this.audioEngine;
 		const bufferDuration = bufferSize / sampleRate;
 		const onsetValueCount = Math.round(OnsetDetection.onsetBufferDurationS / bufferDuration);
-		return Array.from({ length: onsetValueCount }, _ => 0);
+		return new Float32Array(onsetValueCount);
 	})()
 	
 	private shouldCalculateThreshold = true;
@@ -49,39 +49,32 @@ class OnsetDetection {
 			return;
 		}
 
-		const linearSpectrum = spectrum.map(value => {
-			const exponent = value / 20;
-			return Math.pow(10, exponent)
-		});
+		const linearSpectrum = spectrum.map(decibelToLinear);
 
 		const flux = computeSpectralFlux(
 			this.previousSpectrum,
 			linearSpectrum
 		);
 		this.previousSpectrum.set(linearSpectrum);
-		this.onsetValues.shift();
-		this.onsetValues.push(flux);
+		this.onsetValues.set(this.onsetValues.subarray(1)); // shift
+		this.onsetValues[this.onsetValues.length - 1] = flux; // push
 
 		if (this.shouldCalculateThreshold) {
-			this.threshold = calculateThreshold(this.onsetValues.slice());
+			this.threshold = mean(this.onsetValues);
 		}
 
-		const currentIsPeak = checkForRecentPeak(
-			this.onsetValues.slice(),
-			this.threshold
-		);
+		const currentIsPeak = checkForRecentPeak(this.onsetValues, this.threshold);
 		if (currentIsPeak) {
 			if (this.onOnsetDetected != null) {
 				this.onOnsetDetected(timeStamp);
 			}
 		}
 
-		this.onProcessCallbacks.forEach(onProcess => {
-			onProcess({
-				isPeak: currentIsPeak,
-				threshold: this.threshold,
-				value: this.onsetValues[this.onsetValues.length - 1]
-			});
+		if (!this.onOnsetResultData) { return };
+		this.onOnsetResultData({
+			isPeak: currentIsPeak,
+			threshold: this.threshold,
+			value: this.onsetValues[this.onsetValues.length - 1]
 		});
 	};
 }
@@ -99,13 +92,11 @@ const computeSpectralFlux = (previousSpectrum: Float32Array, spectrum: Float32Ar
 	return Math.sqrt(flux) / spectrum.length;
 };
 
-const calculateThreshold = (arr: number[]): number => {
-	const meanValue = mean(arr);
-	const medianValue = median(arr);
-	return (meanValue + medianValue) * 0.75;
-};
+function decibelToLinear(value: number): number {
+	return Math.pow(10, value / 20)
+}
 
-const checkForRecentPeak = (arr: number[], threshold: number) => {
+const checkForRecentPeak = (arr: Float32Array, threshold: number) => {
 	const isLocalMaximum =
 		arr[arr.length - 3] < arr[arr.length - 2] &&
 		arr[arr.length - 2] > arr[arr.length - 1];
@@ -113,13 +104,13 @@ const checkForRecentPeak = (arr: number[], threshold: number) => {
 	return isLocalMaximum && isAboveThreshold;
 };
 
-const mean = (numArray: number[]) => {
+const mean = (numArray: Float32Array) => {
 	const sum = numArray.reduce((a, b) => a + b, 0);
 	return sum / numArray.length;
 };
 
-const median = (numArray: number[]) => {
-	const sortedNumArray = numArray.slice().sort((a, b) => a - b);
+const median = (numArray: Float32Array) => {
+	const sortedNumArray = numArray.sort((a, b) => a - b);
 	const half = Math.floor(sortedNumArray.length / 2);
 
 	if (sortedNumArray.length & 1) {
