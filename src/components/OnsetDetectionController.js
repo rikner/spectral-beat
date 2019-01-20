@@ -14,12 +14,14 @@ const propTypes = {
     setNewRandomColor: PropTypes.func.isRequired,
     setOnsetData: PropTypes.func.isRequired,
     setOnsetDetectionRunning: PropTypes.func.isRequired,
+    settingsAreVisible: PropTypes.bool.isRequired,
     toggleSettingsVisibility: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
     autoThresholdIsActive: state.onsetDetection.autoThresholdIsActive,
     onsetDetectionIsRunning: state.onsetDetection.isRunning,
+    settingsAreVisible: state.settings.settingsAreVisible,
     userThreshold: state.onsetDetection.userThreshold,
 });
 
@@ -50,9 +52,6 @@ class OnsetDetectionController extends Component {
 
     componentDidMount() {
         this.onsetDetection.onOnsetDetected = withRefractoryTime(this.props.setNewRandomColor);
-        this.onsetDetection.onProcessCallbacks.push((onsetData) => {
-            this.props.setOnsetData(onsetData);
-        });
     }
 
     componentDidUpdate(prevProps) {
@@ -69,6 +68,14 @@ class OnsetDetectionController extends Component {
 
         if (prevProps.userThreshold !== this.props.userThreshold) {
             this.onsetDetection.setThreshold(this.props.userThreshold);
+        }
+
+        if (prevProps.settingsAreVisible !== this.props.settingsAreVisible) {
+            if (this.props.settingsAreVisible) {
+                this.onsetDetection.onOnsetResultData = this.props.setOnsetData;
+            } else {
+                this.onsetDetection.onOnsetResultData = null
+            }
         }
     }
 
