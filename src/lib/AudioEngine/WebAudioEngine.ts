@@ -36,10 +36,13 @@ class WebAudioEngine {
 		this.processingNode.onaudioprocess = this.audioProcessingCallback;
 		
 		this.gainNode = this.audioContext.createGain();
-		this.gainNode.gain.setValueAtTime(1, this.audioContext.currentTime + 1);
 	}
 
 	public start() {
+		// only play back through speakers when buffer source (prevent mic feedback)
+		const gainValue = isAudioBufferSource(this.inputNode) ? 1 : 0;
+		this.gainNode.gain.setValueAtTime(gainValue, this.audioContext.currentTime);
+
 		this.audioContext.resume();
 		this.connect();
 	}
@@ -85,6 +88,9 @@ class WebAudioEngine {
 
 export default WebAudioEngine;
 
+function isAudioBufferSource(node: MediaStreamAudioSourceNode | AudioBufferSourceNode | null): node is AudioBufferSourceNode {
+	return (node as AudioBufferSourceNode).buffer !== undefined;
+}
 
 async function createStreamSource(audioContext: AudioContext): Promise<MediaStreamAudioSourceNode> {
 	const mediaStreamConstraints: any = { audio: { echoCancellation: false, noiseSuppression: false }}
