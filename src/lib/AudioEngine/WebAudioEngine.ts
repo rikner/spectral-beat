@@ -14,7 +14,7 @@ class WebAudioEngine {
 	public onFloatFrequencyData: ((data: Float32Array, timeStamp: number) => void) | null = null;
 
 	private audioContext: AudioContext;
-	private inputNode: MediaStreamAudioSourceNode;
+	private inputNode: AudioBufferSourceNode | MediaStreamAudioSourceNode | null;
 	private analyserNode: AnalyserNode;
 	private processingNode: ScriptProcessorNode;
 	private gainNode: GainNode;
@@ -27,7 +27,7 @@ class WebAudioEngine {
 		this.audioContext = new CrossBrowserAudioContext(options);
 
 		createStreamSource(this.audioContext)
-		.then(sourceNode => {
+		.then(sourceNode => { 
 			this.inputNode = sourceNode
 		})
 		this.analyserNode = this.audioContext.createAnalyser();
@@ -42,24 +42,22 @@ class WebAudioEngine {
 	public start() {
 		this.audioContext.resume();
 		this.connect();
-		// this.inputNode.start();
 	}
 
 	public stop() {
-		// this.inputNode.stop();
 		this.disconnect();
 		this.audioContext.suspend();
 	}
 
 	private connect() {
-		this.inputNode.connect(this.analyserNode);
+		if (this.inputNode) { this.inputNode.connect(this.analyserNode); }
 		this.analyserNode.connect(this.processingNode);
 		this.processingNode.connect(this.gainNode);
 		this.gainNode.connect(this.audioContext.destination);
 	}
 
 	private disconnect() {
-		this.inputNode.disconnect();
+		if (this.inputNode) { this.inputNode.disconnect(); }
 		this.analyserNode.disconnect();
 		this.processingNode.disconnect();
 		this.gainNode.disconnect();
@@ -88,7 +86,6 @@ class WebAudioEngine {
 export default WebAudioEngine;
 
 
-
 async function createStreamSource(audioContext: AudioContext): Promise<MediaStreamAudioSourceNode> {
 	const mediaStreamConstraints: any = { audio: { echoCancellation: false, noiseSuppression: false }}
 	const mediaStream = await navigator.mediaDevices.getUserMedia(mediaStreamConstraints);
@@ -96,10 +93,12 @@ async function createStreamSource(audioContext: AudioContext): Promise<MediaStre
 	return mediaStreamSource;
 }
 
-async function createBufferSource(audioContext: AudioContext, url: string): Promise<AudioBufferSourceNode> {	
-	const audioBuffer = await getAudioBufferFromURL(url, audioContext)
+async function createBufferSource(audioContext: AudioContext): Promise<AudioBufferSourceNode> {
+	const sourceFileURL = "example.mp3";
+	const audioBuffer = await getAudioBufferFromURL(sourceFileURL, audioContext)
 	const bufferSourceNode = audioContext.createBufferSource();
 	bufferSourceNode.buffer = audioBuffer;
+	bufferSourceNode.start(); // just start it right away, enough for testing purposes
 	return bufferSourceNode;
 }
 
