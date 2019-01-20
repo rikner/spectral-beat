@@ -1,88 +1,66 @@
 class WebAudioEngine {
+	public get frequencyBinCount(): number {
+		return this.analyserNode.frequencyBinCount;
+	}
 
-	// https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints
-	private static mediaStreamConstraints: any = {
-		audio: {
-			echoCancellation: false,
-			noiseSuppression: false
-		}
+	public get sampleRate(): number {
+		return this.audioContext.sampleRate;
+	}
+
+	public get bufferSize(): number {
+		return this.processingNode.bufferSize;
 	}
 
 	public onFloatFrequencyData: ((data: Float32Array, timeStamp: number) => void) | null = null;
 
 	private audioContext: AudioContext;
-
-	private inputNode: MediaStreamAudioSourceNode | null = null;
-	private filterNode: BiquadFilterNode;
+	private inputNode: AudioBufferSourceNode | MediaStreamAudioSourceNode | null;
 	private analyserNode: AnalyserNode;
 	private processingNode: ScriptProcessorNode;
 	private gainNode: GainNode;
-	private bufferSize: number;
 
-	constructor(bufferSize: number) {
+	constructor(targetBufferSize: number | undefined) {
 		const options: AudioContextOptions = {
 			latencyHint: "interactive"
 		}
 		const CrossBrowserAudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
 		this.audioContext = new CrossBrowserAudioContext(options);
-		this.bufferSize = bufferSize;
 
-		// filter
-		this.filterNode = this.audioContext.createBiquadFilter();
-		this.filterNode.type = "lowpass";
-		this.filterNode.frequency.setValueAtTime(1000, 0);
-
-		// fft
+		createStreamSource(this.audioContext)
+		.then(sourceNode => { 
+			this.inputNode = sourceNode
+		})
 		this.analyserNode = this.audioContext.createAnalyser();
-
-		// processing
-		this.processingNode = this.audioContext.createScriptProcessor(this.bufferSize, 1, 1);
+		
+		this.processingNode = this.audioContext.createScriptProcessor(targetBufferSize);
 		this.processingNode.onaudioprocess = this.audioProcessingCallback;
-
-		// gain
+		
 		this.gainNode = this.audioContext.createGain();
-		this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime + 1);
-	}
-
-	public get frequencyBinCount(): number {
-		return this.analyserNode.frequencyBinCount;
 	}
 
 	public start() {
-		if (this.inputNode) {
-			this.connect();
-		} else {
-			const constraints = WebAudioEngine.mediaStreamConstraints
-			navigator.mediaDevices.getUserMedia(constraints)
-			.then((mediaStream: MediaStream) => {
-				this.inputNode = this.audioContext.createMediaStreamSource(mediaStream);
-				this.connect();
-			})
-			.catch(console.error);
-		}
+		// only play back through speakers when buffer source (prevent mic feedback)
+		const gainValue = isAudioBufferSource(this.inputNode) ? 1 : 0;
+		this.gainNode.gain.setValueAtTime(gainValue, this.audioContext.currentTime);
+
 		this.audioContext.resume();
+		this.connect();
 	}
 
 	public stop() {
 		this.disconnect();
-		this.inputNode = null; // safari workaround
 		this.audioContext.suspend();
 	}
 
 	private connect() {
-		if (this.inputNode) {
-			this.inputNode.connect(this.analyserNode);
-		}
+		if (this.inputNode) { this.inputNode.connect(this.analyserNode); }
 		this.analyserNode.connect(this.processingNode);
 		this.processingNode.connect(this.gainNode);
 		this.gainNode.connect(this.audioContext.destination);
 	}
 
 	private disconnect() {
-		if (this.inputNode) {
-			this.inputNode.disconnect();
-		}
-		this.filterNode.disconnect();
+		if (this.inputNode) { this.inputNode.disconnect(); }
 		this.analyserNode.disconnect();
 		this.processingNode.disconnect();
 		this.gainNode.disconnect();
@@ -95,7 +73,54 @@ class WebAudioEngine {
 		if (this.onFloatFrequencyData) {
 			this.onFloatFrequencyData(dataArray, audioProcessingEvent.timeStamp);
 		}
+
+		const inputBuffer = audioProcessingEvent.inputBuffer;
+		const outputBuffer = audioProcessingEvent.outputBuffer;
+
+		// Loop through the output channels (in this case there is only one)
+		for (let channel = 0; channel < outputBuffer.numberOfChannels; channel++) {
+			const inputData = inputBuffer.getChannelData(channel);
+			const outputData = outputBuffer.getChannelData(channel);
+			outputData.set(inputData);
+		}
 	};
 }
 
 export default WebAudioEngine;
+
+function isAudioBufferSource(node: MediaStreamAudioSourceNode | AudioBufferSourceNode | null): node is AudioBufferSourceNode {
+	return (node as AudioBufferSourceNode).buffer !== undefined;
+}
+
+async function createStreamSource(audioContext: AudioContext): Promise<MediaStreamAudioSourceNode> {
+	const mediaStreamConstraints: any = { audio: { echoCancellation: false, noiseSuppression: false }}
+	const mediaStream = await navigator.mediaDevices.getUserMedia(mediaStreamConstraints);
+	const mediaStreamSource = audioContext.createMediaStreamSource(mediaStream);
+	return mediaStreamSource;
+}
+
+async function createBufferSource(audioContext: AudioContext): Promise<AudioBufferSourceNode> {
+	const sourceFileURL = "example.mp3";
+	const audioBuffer = await getAudioBufferFromURL(sourceFileURL, audioContext)
+	const bufferSourceNode = audioContext.createBufferSource();
+	bufferSourceNode.buffer = audioBuffer;
+	bufferSourceNode.start(); // just start it right away, enough for testing purposes
+	return bufferSourceNode;
+}
+
+async function getAudioBufferFromURL(url: string, audioContext: AudioContext): Promise<AudioBuffer> {
+	const response = await fetch(url);
+	const arrayBuffer = await response.arrayBuffer();
+
+	// decodeAudiData() is browser-specific (promise vs. callback)
+	if (!!(window as any).webkitAudioContext) {
+		return new Promise<AudioBuffer>((resolve, reject) => {
+			audioContext.decodeAudioData(arrayBuffer, resolve, reject);
+
+		});
+	} else {
+		return audioContext.decodeAudioData(arrayBuffer);
+	}
+}
+
+
