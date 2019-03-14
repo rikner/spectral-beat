@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import OnsetDetection from '../lib/OnsetDetection';
 import { getRandomColor } from '../lib/helpers';
-import ControlPanel from '../components/ControlPanel';
+
 
 import * as actions from "../actions";
     
@@ -13,9 +13,9 @@ const propTypes = {
     onsetDetectionIsRunning: PropTypes.bool.isRequired,
     setNewRandomColor: PropTypes.func.isRequired,
     setOnsetData: PropTypes.func.isRequired,
-    setOnsetDetectionRunning: PropTypes.func.isRequired,
+    // setOnsetDetectionRunning: PropTypes.func.isRequired,
     settingsAreVisible: PropTypes.bool.isRequired,
-    toggleSettingsVisibility: PropTypes.func.isRequired,
+    // toggleSettingsVisibility: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -36,12 +36,12 @@ const mapDispatchToProps = dispatch => ({
     setOnsetData: (onsetData) => {
         dispatch(actions.setOnsetData(onsetData));
     },
-    setOnsetDetectionRunning: (isRunning) => {
-        dispatch(actions.setOnsetDetectionRunning(isRunning));
-    },
-    toggleSettingsVisibility: () => {
-        dispatch(actions.toggleSettingsVisibility());
-    },
+    // setOnsetDetectionRunning: (isRunning) => {
+    //     dispatch(actions.setOnsetDetectionRunning(isRunning));
+    // },
+    // toggleSettingsVisibility: () => {
+    //     dispatch(actions.toggleSettingsVisibility());
+    // },
 });
 
 class OnsetDetectionController extends Component {
@@ -79,21 +79,21 @@ class OnsetDetectionController extends Component {
         }
     }
 
-    render() {
-        const {
-            onsetDetectionIsRunning,
-            setOnsetDetectionRunning,
-            toggleSettingsVisibility
-        } = this.props;
+    // render() {
+    //     const {
+    //         onsetDetectionIsRunning,
+    //         setOnsetDetectionRunning,
+    //         toggleSettingsVisibility
+    //     } = this.props;
 
-        return (
-            <ControlPanel
-                onClickStartStop={(isRunning) => { setOnsetDetectionRunning(isRunning); }}
-                onClickSettings={toggleSettingsVisibility}
-                isRunning={onsetDetectionIsRunning}
-            />
-        );
-    }
+    //     return (
+    //         <ControlPanel
+    //             onClickStartStop={(isRunning) => { setOnsetDetectionRunning(isRunning); }}
+    //             onClickSettings={toggleSettingsVisibility}
+    //             isRunning={onsetDetectionIsRunning}
+    //         />
+    //     );
+    // }
 }
 
 OnsetDetectionController.propTypes = propTypes;

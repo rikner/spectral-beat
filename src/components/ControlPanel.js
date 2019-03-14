@@ -1,12 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ControlButton from './Button';
+import { connect } from 'react-redux';
+import * as actions from "../actions";
 
 const propTypes = {
     isRunning: PropTypes.bool.isRequired,
     onClickSettings: PropTypes.func.isRequired,
     onClickStartStop: PropTypes.func.isRequired,
 };
+
+const mapStateToProps = state => ({
+    isRunning: state.onsetDetection.isRunning
+});
+
+const mapDispatchToProps = dispatch => ({
+    onClickSettings: () => {
+        dispatch(actions.toggleSettingsVisibility());
+    },
+    onClickStartStop: (isRunning) => {
+        dispatch(actions.setOnsetDetectionRunning(isRunning));
+    },
+});
 
 class ControlPanel extends Component {
     render() {
@@ -31,7 +46,6 @@ class ControlPanel extends Component {
                     label={isRunning ? "Stop" : "Start"}
                     onClick={() => onClickStartStop(!isRunning) }
                 />
-
             </div>
         );
     }
@@ -39,4 +53,4 @@ class ControlPanel extends Component {
 
 ControlPanel.propTypes = propTypes;
 
-export default ControlPanel;
+export default connect(mapStateToProps, mapDispatchToProps)(ControlPanel);

@@ -4,24 +4,18 @@ import { connect } from 'react-redux';
 
 import SettingsOverlay from '../components/SettingsOverlay';
 import OnsetDetectionController from '../components/OnsetDetectionController';
-import * as actions from '../actions';
+import ControlPanel from '../components/ControlPanel';
 import { toggleFullScreen } from '../lib/helpers';
 
 
 const propTypes = {
-    setSettingsVisibility: PropTypes.func.isRequired,
+    backgroundColor: PropTypes.string.isRequired,
     settingsAreVisible: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = ({ canvas, settings }) => ({
     backgroundColor: canvas.currentColor,
     settingsAreVisible: settings.settingsAreVisible,
-});
-
-const mapDispatchToProps = dispatch => ({
-    setSettingsVisibility: (visible) => {
-        dispatch(actions.setSettingsVisibility(visible));
-    },
 });
 
 class SpectralBeatMainView extends Component {
@@ -31,6 +25,7 @@ class SpectralBeatMainView extends Component {
             <div 
                 style={{ backgroundColor, ...styles.main }}
             >
+                <OnsetDetectionController />
                 <div style={styles.fullscreenButtonWrapper}>
                     <img
                         src={'fullscreen.png'}
@@ -45,8 +40,12 @@ class SpectralBeatMainView extends Component {
                         : null
                     }
                 </div>
-                <div style={styles.controllerContainer}>
-                    <OnsetDetectionController />
+                <div style={styles.controlPanelContainer}>
+                    <ControlPanel
+                        // onClickStartStop={(isRunning) => { setOnsetDetectionRunning(isRunning); }}
+                        // onClickSettings={toggleSettingsVisibility}
+                        // isRunning={onsetDetectionIsRunning}
+                    />
                 </div>
 
             </div>
@@ -57,7 +56,7 @@ class SpectralBeatMainView extends Component {
 SpectralBeatMainView.propTypes = propTypes;
 
 const styles = {
-    controllerContainer: {
+    controlPanelContainer: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-start',
