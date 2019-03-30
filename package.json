@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "rc-slider": "^8.6.3",
-    "react": "^16.7.0",
+    "react": "^16.8.4",
     "react-dom": "^16.7.0",
     "react-redux": "^6.0.0",
     "react-scripts-ts": "3.1.0",
