@@ -18,16 +18,14 @@ class WebAudioEngine {
 		this.processingNode = this.audioContext.createScriptProcessor(targetBufferSize);
 		this.processingNode.onaudioprocess = this.audioProcessingCallback;
 		this.gainNode = this.audioContext.createGain();
-		this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+		this.gainNode.gain.setValueAtTime(1, this.audioContext.currentTime);
 	}
 	
 	public async start() {
-		if (this.inputNode) {
-			this.connect();
-		} else {
+		if (!this.inputNode) {
 			this.inputNode = await createStreamSource(this.audioContext);
-			this.connect();
 		}
+		this.connect();
 		this.audioContext.resume();
 	}
 
