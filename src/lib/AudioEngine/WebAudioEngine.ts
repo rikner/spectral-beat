@@ -1,3 +1,5 @@
+import { toggleAutoThresholdIsActive } from "src/actions";
+
 class WebAudioEngine {
 	public onFloatFrequencyData: ((data: Float32Array, timeStamp: number) => void) | null = null;
 	public get frequencyBinCount(): number { return this.analyserNode.frequencyBinCount; }
@@ -10,6 +12,9 @@ class WebAudioEngine {
 	private processingNode: ScriptProcessorNode;
 	private gainNode: GainNode;
 
+	private workletNode: AudioWorkletNode
+	
+
 	constructor(targetBufferSize: number | undefined) {
 		const options: AudioContextOptions = { latencyHint: "interactive" }
 		const CrossBrowserAudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
@@ -18,12 +23,16 @@ class WebAudioEngine {
 		this.processingNode = this.audioContext.createScriptProcessor(targetBufferSize);
 		this.processingNode.onaudioprocess = this.audioProcessingCallback;
 		this.gainNode = this.audioContext.createGain();
-		this.gainNode.gain.setValueAtTime(1, this.audioContext.currentTime);
+		this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+
+		(this.audioContext as any).audioWorklet.addModule('OnsetWorkletProcessor.js').then(() => { 
+			this.workletNode = new AudioWorkletNode(this.audioContext, 'onset-worklet-processor'); 
+		});
 	}
 	
 	public async start() {
 		if (!this.inputNode) {
-			this.inputNode = await createStreamSource(this.audioContext);
+			this.inputNode = await createBufferSource(this.audioContext);
 		}
 		this.connect();
 		this.audioContext.resume();
@@ -48,6 +57,9 @@ class WebAudioEngine {
 			this.inputNode.connect(this.gainNode);
 			this.inputNode.connect(this.analyserNode);
 			this.inputNode.connect(this.processingNode);
+
+			this.inputNode.connect(this.workletNode);
+			this.workletNode.connect(this.audioContext.destination);
 		}
 		this.analyserNode.connect(this.gainNode); // chromes web audio has issues, when you don't connect the analyser output
 		this.processingNode.connect(this.gainNode);
@@ -61,6 +73,8 @@ class WebAudioEngine {
 		this.analyserNode.disconnect();
 		this.processingNode.disconnect();
 		this.gainNode.disconnect();
+
+		this.workletNode.disconnect();
 	}
 
 	private audioProcessingCallback = (audioProcessingEvent: AudioProcessingEvent) => {
