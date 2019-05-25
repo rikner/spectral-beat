@@ -18,7 +18,7 @@ class WebAudioEngine {
 		this.processingNode = this.audioContext.createScriptProcessor(targetBufferSize);
 		this.processingNode.onaudioprocess = this.audioProcessingCallback;
 		this.gainNode = this.audioContext.createGain();
-		this.gainNode.gain.setValueAtTime(1, this.audioContext.currentTime);
+		this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
 	}
 	
 	public async start() {
