@@ -7,11 +7,11 @@ interface IOnsetResultData {
 }
 
 class OnsetDetection {
-	private static desiredBufferSize: number | undefined = 512;
+	private static desiredBufferSize = 512;
 	private static onsetBufferDurationS = 2.5;
 	
-	public onOnsetResultData: ((data: IOnsetResultData) => void) | null = null;
-	public onOnsetDetected: ((timeStamp: number) => void) | null = null;
+	public onOnsetResultData?: ((data: IOnsetResultData) => void);
+	public onOnsetDetected?: ((timeStamp: number) => void);
 	
 	private audioEngine = new WebAudioEngine(OnsetDetection.desiredBufferSize);
 	private previousSpectrum = new Float32Array(this.audioEngine.frequencyBinCount);
@@ -34,12 +34,12 @@ class OnsetDetection {
 		this.audioEngine.stop();
 	}
 
-	public setThreshold(value: number | null) {
-		if (value != null) {
+	public setThreshold(value?: number) {
+		if (!value) {
+			this.shouldCalculateThreshold = true;
+		} else {
 			this.threshold = value;
 			this.shouldCalculateThreshold = false;
-		} else {
-			this.shouldCalculateThreshold = true;
 		}
 	}
 	
