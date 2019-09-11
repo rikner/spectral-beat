@@ -1,5 +1,3 @@
-import WebAudioEngine from "./AudioEngine/WebAudioEngine";
-
 interface IOnsetResultData {
 	isPeak: boolean;
 	threshold: number;
@@ -7,32 +5,30 @@ interface IOnsetResultData {
 }
 
 class OnsetDetection {
-	private static desiredBufferSize = 512;
 	private static onsetBufferDurationS = 2.5;
-	
+
 	public onOnsetResultData?: ((data: IOnsetResultData) => void);
 	public onOnsetDetected?: ((timeStamp: number) => void);
-	
-	private audioEngine = new WebAudioEngine(OnsetDetection.desiredBufferSize);
-	private previousSpectrum = new Float32Array(this.audioEngine.frequencyBinCount);
-	private onsetValues: Float32Array = (() => {
-		const { bufferSize, sampleRate } = this.audioEngine;
-		const bufferDuration = bufferSize / sampleRate;
-		const onsetValueCount = Math.round(OnsetDetection.onsetBufferDurationS / bufferDuration);
-		return new Float32Array(onsetValueCount);
-	})()
-	
+
+	private previousSpectrum: Float32Array;
+	private onsetValues: Float32Array;
+
 	private shouldCalculateThreshold = true;
 	private threshold: number = 0;
+	private readonly sampleRate: number;
+	private readonly bufferSize: number;
 
-	public startAudioProcessing() {
-		this.audioEngine.onFloatFrequencyData = this.run;
-		this.audioEngine.start();
+	constructor(sampleRate: number, bufferSize: number) {
+		this.sampleRate = sampleRate;
+		this.bufferSize = bufferSize;
+		this.onsetValues = (() => {
+			const bufferDuration = bufferSize / sampleRate;
+			const onsetValueCount = Math.round(OnsetDetection.onsetBufferDurationS / bufferDuration);
+			return new Float32Array(onsetValueCount);
+		})()
+		this.previousSpectrum = new Float32Array(bufferSize * 2);
 	}
 
-	public stopAudioProcessing() {
-		this.audioEngine.stop();
-	}
 
 	public setThreshold(value?: number) {
 		if (!value) {
@@ -42,7 +38,7 @@ class OnsetDetection {
 			this.shouldCalculateThreshold = false;
 		}
 	}
-	
+
 	private run = (spectrum: Float32Array, timeStamp: number) => {
 		if (spectrum.length !== this.previousSpectrum.length) {
 			console.error("previous and current spectrum don't have the same length");

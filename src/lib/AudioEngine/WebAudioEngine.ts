@@ -1,9 +1,11 @@
+const BUFFER_SOURCE_DEBUG = false;
+
 class WebAudioEngine {
 	public onFloatFrequencyData?: ((data: Float32Array, timeStamp: number) => void);
 	public get frequencyBinCount(): number { return this.analyserNode.frequencyBinCount; }
 	public get sampleRate(): number { return this.audioContext.sampleRate; }
 	public get bufferSize(): number { return this.processingNode.bufferSize; }
-	
+
 	private audioContext: AudioContext;
 	private inputNode?: AudioBufferSourceNode | MediaStreamAudioSourceNode;
 	private analyserNode: AnalyserNode;
@@ -18,12 +20,14 @@ class WebAudioEngine {
 		this.processingNode = this.audioContext.createScriptProcessor(targetBufferSize);
 		this.processingNode.onaudioprocess = this.audioProcessingCallback;
 		this.gainNode = this.audioContext.createGain();
-		this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+		const gainValue = BUFFER_SOURCE_DEBUG ? 1 : 0;
+		this.gainNode.gain.setValueAtTime(gainValue, this.audioContext.currentTime);
 	}
-	
+
 	public async start() {
 		if (!this.inputNode) {
-			this.inputNode = await createStreamSource(this.audioContext);
+			const createSource = BUFFER_SOURCE_DEBUG ? createBufferSource : createStreamSource;
+			this.inputNode = await createSource(this.audioContext);
 		}
 		this.connect();
 		this.audioContext.resume();
@@ -44,7 +48,7 @@ class WebAudioEngine {
 	}
 
 	private connect() {
-		if (this.inputNode) { 
+		if (this.inputNode) {
 			this.inputNode.connect(this.gainNode);
 			this.inputNode.connect(this.analyserNode);
 			this.inputNode.connect(this.processingNode);
@@ -55,7 +59,7 @@ class WebAudioEngine {
 	}
 
 	private disconnect() {
-		if (this.inputNode) { 
+		if (this.inputNode) {
 			this.inputNode.disconnect();
 		}
 		this.analyserNode.disconnect();
@@ -76,7 +80,7 @@ class WebAudioEngine {
 export default WebAudioEngine;
 
 async function createStreamSource(audioContext: AudioContext): Promise<MediaStreamAudioSourceNode> {
-	const mediaStreamConstraints: any = { audio: { echoCancellation: false, noiseSuppression: false }}
+	const mediaStreamConstraints: any = { audio: { echoCancellation: false, noiseSuppression: false } };
 	const mediaStream = await navigator.mediaDevices.getUserMedia(mediaStreamConstraints);
 	const mediaStreamSource = audioContext.createMediaStreamSource(mediaStream);
 	return mediaStreamSource;
