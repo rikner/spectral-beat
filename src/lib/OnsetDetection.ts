@@ -7,8 +7,8 @@ interface IOnsetResultData {
 class OnsetDetection {
 	private static onsetBufferDurationS = 2.5;
 
-	public onOnsetResultData: ((data: IOnsetResultData) => void) | null = null;
-	public onOnsetDetected: ((timeStamp: number) => void) | null = null;
+	public onOnsetResultData?: ((data: IOnsetResultData) => void);
+	public onOnsetDetected?: ((timeStamp: number) => void);
 
 	private previousSpectrum: Float32Array;
 	private onsetValues: Float32Array;
@@ -30,12 +30,12 @@ class OnsetDetection {
 	}
 
 
-	public setThreshold(value: number | null) {
-		if (value != null) {
+	public setThreshold(value?: number) {
+		if (!value) {
+			this.shouldCalculateThreshold = true;
+		} else {
 			this.threshold = value;
 			this.shouldCalculateThreshold = false;
-		} else {
-			this.shouldCalculateThreshold = true;
 		}
 	}
 

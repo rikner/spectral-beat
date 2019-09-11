@@ -1,13 +1,13 @@
 const BUFFER_SOURCE_DEBUG = false;
 
 class WebAudioEngine {
-	public onFloatFrequencyData: ((data: Float32Array, timeStamp: number) => void) | null = null;
+	public onFloatFrequencyData?: ((data: Float32Array, timeStamp: number) => void);
 	public get frequencyBinCount(): number { return this.analyserNode.frequencyBinCount; }
 	public get sampleRate(): number { return this.audioContext.sampleRate; }
 	public get bufferSize(): number { return this.processingNode.bufferSize; }
 
 	private audioContext: AudioContext;
-	private inputNode: AudioBufferSourceNode | MediaStreamAudioSourceNode | null;
+	private inputNode?: AudioBufferSourceNode | MediaStreamAudioSourceNode;
 	private analyserNode: AnalyserNode;
 	private processingNode: ScriptProcessorNode;
 	private gainNode: GainNode;
@@ -43,7 +43,7 @@ class WebAudioEngine {
 		// in order to be able to stop and restart correctly
 		// we need to kill (and later recreate) the input node
 		if (!!(window as any).webkitAudioContext) {
-			this.inputNode = null;
+			this.inputNode = undefined;
 		}
 	}
 
