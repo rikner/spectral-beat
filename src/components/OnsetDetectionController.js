@@ -7,7 +7,8 @@ import { getRandomColor } from '../lib/helpers';
 import ControlPanel from '../components/ControlPanel';
 
 import * as actions from "../actions";
-    
+import WebAudioEngine from 'src/lib/AudioEngine/WebAudioEngine';
+
 const propTypes = {
     autoThresholdIsActive: PropTypes.bool.isRequired,
     onsetDetectionIsRunning: PropTypes.bool.isRequired,
@@ -45,21 +46,34 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class OnsetDetectionController extends Component {
+    static desiredBufferSize = 512;
+    static refractoryTimeMS = 75;
+
     constructor() {
         super();
-        this.onsetDetection = new OnsetDetection();
+        this.audioEngine = new WebAudioEngine(OnsetDetectionController.desiredBufferSize);
+        this.onsetDetection = new OnsetDetection(this.audioEngine.sampleRate, this.audioEngine.bufferSize);
+    }
+
+    startAudioProcessing() {
+        this.audioEngine.onFloatFrequencyData = this.onsetDetection.run;
+        this.audioEngine.start();
+    }
+
+    stopAudioProcessing() {
+        this.audioEngine.stop();
     }
 
     componentDidMount() {
-        this.onsetDetection.onOnsetDetected = withRefractoryTime(this.props.setNewRandomColor);
+        this.onsetDetection.onOnsetDetected = withRefractoryTime(OnsetDetectionController.refractoryTimeMS)(this.props.setNewRandomColor);
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.onsetDetectionIsRunning !== this.props.onsetDetectionIsRunning) {
             if (this.props.onsetDetectionIsRunning) {
-                this.onsetDetection.startAudioProcessing();
+                this.startAudioProcessing();
             } else {
-                this.onsetDetection.stopAudioProcessing();
+                this.stopAudioProcessing();
             }
         }
         if (prevProps.autoThresholdIsActive !== this.props.autoThresholdIsActive) {
@@ -100,15 +114,15 @@ OnsetDetectionController.propTypes = propTypes;
 
 // tslint:disable:no-console
 
-
-function withRefractoryTime(callback) {
-    const REFRACTORY_TIME_MS = 75;
-    let lastDetectionTimeStamp = 0;
-    return function(timeStamp) {
-        if ((timeStamp - lastDetectionTimeStamp) >= REFRACTORY_TIME_MS) {
-            callback();
+function withRefractoryTime(refactoryTime) {
+    return function (callback) {
+        let lastDetectionTimeStamp = 0;
+        return function (timeStamp) {
+            if ((timeStamp - lastDetectionTimeStamp) >= refactoryTime) {
+                callback();
+            }
+            lastDetectionTimeStamp = timeStamp;
         }
-        lastDetectionTimeStamp = timeStamp;
     }
 }
 
