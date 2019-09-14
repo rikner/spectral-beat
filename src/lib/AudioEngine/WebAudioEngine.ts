@@ -1,7 +1,7 @@
 const BUFFER_SOURCE_DEBUG = false;
 
 class WebAudioEngine {
-	public onFloatFrequencyData?: ((data: Float32Array, timeStamp: number) => void);
+	public onFloatFrequencyData?: (data: Float32Array, timeStamp: number) => void;
 	public get frequencyBinCount(): number { return this.analyserNode.frequencyBinCount; }
 	public get sampleRate(): number { return this.audioContext.sampleRate; }
 	public get bufferSize(): number { return this.processingNode.bufferSize; }
@@ -13,7 +13,7 @@ class WebAudioEngine {
 	private gainNode: GainNode;
 
 	constructor(targetBufferSize: number | undefined) {
-		const options: AudioContextOptions = { latencyHint: "interactive" }
+		const options: AudioContextOptions = { latencyHint: "interactive" };
 		const CrossBrowserAudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
 		this.audioContext = new CrossBrowserAudioContext(options);
 		this.analyserNode = this.audioContext.createAnalyser();
@@ -88,7 +88,7 @@ async function createStreamSource(audioContext: AudioContext): Promise<MediaStre
 
 // for debugging purposes
 async function createBufferSource(audioContext: AudioContext): Promise<AudioBufferSourceNode> {
-	audioContext.resume() // XXX: seems to fix issues
+	audioContext.resume(); // XXX: seems to fix issues
 	const sourceFileURL = "example.mp3";
 	const audioBuffer = await getAudioBufferFromURL(sourceFileURL, audioContext);
 	const bufferSourceNode = audioContext.createBufferSource();
@@ -110,5 +110,3 @@ async function getAudioBufferFromURL(url: string, audioContext: AudioContext): P
 		return audioContext.decodeAudioData(arrayBuffer);
 	}
 }
-
-
