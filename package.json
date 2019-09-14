@@ -5,12 +5,12 @@
   "private": true,
   "dependencies": {
     "rc-slider": "^8.6.3",
-    "react": "^16.8.4",
-    "react-dom": "^16.7.0",
-    "react-redux": "^6.0.0",
-    "react-scripts-ts": "3.1.0",
-    "react-sizes": "^1.0.4",
-    "redux": "^4.0.1"
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-redux": "^7.1.1",
+    "react-scripts-ts": "^4.0.8",
+    "react-sizes": "^2.0.0",
+    "redux": "^4.0.4"
   },
   "scripts": {
     "start": "react-scripts-ts start",
@@ -21,12 +21,18 @@
     "deploy": "gh-pages -d build"
   },
   "devDependencies": {
-    "@types/jest": "^23.1.1",
-    "@types/node": "^10.3.4",
-    "@types/react": "^16.4.0",
-    "@types/react-dom": "^16.0.6",
-    "@types/react-redux": "^6.0.2",
+    "@types/jest": "^24.0.18",
+    "@types/node": "^12.7.5",
+    "@types/react": "^16.9.2",
+    "@types/react-dom": "^16.9.0",
+    "@types/react-redux": "^7.1.2",
     "gh-pages": "^2.0.1",
-    "typescript": "^3.2.2"
-  }
+    "typescript": "^3.6.2"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
