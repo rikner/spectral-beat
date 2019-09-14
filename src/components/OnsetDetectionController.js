@@ -52,7 +52,7 @@ class OnsetDetectionController extends Component {
     constructor() {
         super();
         this.audioEngine = new WebAudioEngine(OnsetDetectionController.desiredBufferSize);
-        this.onsetDetection = new OnsetDetection(this.audioEngine.sampleRate, this.audioEngine.bufferSize);
+        this.onsetDetection = new OnsetDetection(this.audioEngine.sampleRate, this.audioEngine.bufferSize, this.audioEngine.frequencyBinCount);
     }
 
     startAudioProcessing() {

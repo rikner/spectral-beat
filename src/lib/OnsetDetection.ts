@@ -15,18 +15,14 @@ class OnsetDetection {
 
 	private shouldCalculateThreshold = true;
 	private threshold: number = 0;
-	private readonly sampleRate: number;
-	private readonly bufferSize: number;
 
-	constructor(sampleRate: number, bufferSize: number) {
-		this.sampleRate = sampleRate;
-		this.bufferSize = bufferSize;
+	constructor(sampleRate: number, bufferSize: number, frequencyBinCount: number) {
 		this.onsetValues = (() => {
 			const bufferDuration = bufferSize / sampleRate;
 			const onsetValueCount = Math.round(OnsetDetection.onsetBufferDurationS / bufferDuration);
 			return new Float32Array(onsetValueCount);
 		})()
-		this.previousSpectrum = new Float32Array(bufferSize * 2);
+		this.previousSpectrum = new Float32Array(frequencyBinCount);
 	}
 
 
@@ -41,7 +37,7 @@ class OnsetDetection {
 
 	private run = (spectrum: Float32Array, timeStamp: number) => {
 		if (spectrum.length !== this.previousSpectrum.length) {
-			console.error("previous and current spectrum don't have the same length");
+			console.error(`previous ${this.previousSpectrum.length} and current ${spectrum.length} spectrum don't have the same length`);
 			return;
 		}
 
