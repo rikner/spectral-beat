@@ -5,7 +5,8 @@ interface IOnsetResultData {
 }
 
 class OnsetDetection {
-	private static onsetBufferDurationS = 2.5;
+	private static readonly onsetBufferDurationS = 2.5;
+	private static readonly smoothingWindowLength = 2;
 
 	public onOnsetResultData?: ((data: IOnsetResultData) => void);
 	public onOnsetDetected?: ((timeStamp: number) => void);
@@ -47,9 +48,19 @@ class OnsetDetection {
 			this.previousSpectrum,
 			linearSpectrum
 		);
+
+		const smoothedFlux = (() => {
+			const smoothingValues = this.onsetValues.subarray(
+				this.onsetValues.length - OnsetDetection.smoothingWindowLength,
+				this.onsetValues.length
+			);
+			const smoothingValuesSum = smoothingValues.reduce((agg, cur) => agg + cur, 0);
+			return (smoothingValuesSum + flux) / (smoothingValues.length + 1);
+		})();
+
 		this.previousSpectrum.set(linearSpectrum);
 		this.onsetValues.set(this.onsetValues.subarray(1)); // shift
-		this.onsetValues[this.onsetValues.length - 1] = flux; // push
+		this.onsetValues[this.onsetValues.length - 1] = smoothedFlux; // push
 
 		if (this.shouldCalculateThreshold) {
 			this.threshold = mean(this.onsetValues);

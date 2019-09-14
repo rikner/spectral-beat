@@ -46,7 +46,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class OnsetDetectionController extends Component {
-    static desiredBufferSize = 512;
+    static desiredBufferSize = 1024;
     static refractoryTimeMS = 75;
 
     constructor() {
