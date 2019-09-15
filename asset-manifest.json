@@ -1,6 +1,13 @@
 {
-  "main.css": "static/css/main.6396af2e.css",
-  "main.css.map": "static/css/main.6396af2e.css.map",
-  "main.js": "static/js/main.78769624.js",
-  "main.js.map": "static/js/main.78769624.js.map"
+  "main.js": "/spectral-beat/static/js/main.76fc42c3.chunk.js",
+  "main.js.map": "/spectral-beat/static/js/main.76fc42c3.chunk.js.map",
+  "static/css/1.11bf7eb9.chunk.css": "/spectral-beat/static/css/1.11bf7eb9.chunk.css",
+  "static/js/1.6a5169b1.chunk.js": "/spectral-beat/static/js/1.6a5169b1.chunk.js",
+  "static/js/1.6a5169b1.chunk.js.map": "/spectral-beat/static/js/1.6a5169b1.chunk.js.map",
+  "runtime~main.js": "/spectral-beat/static/js/runtime~main.f037c345.js",
+  "runtime~main.js.map": "/spectral-beat/static/js/runtime~main.f037c345.js.map",
+  "static/css/1.11bf7eb9.chunk.css.map": "/spectral-beat/static/css/1.11bf7eb9.chunk.css.map",
+  "index.html": "/spectral-beat/index.html",
+  "precache-manifest.bc8167f6af656ac5a3ee01ade540737a.js": "/spectral-beat/precache-manifest.bc8167f6af656ac5a3ee01ade540737a.js",
+  "service-worker.js": "/spectral-beat/service-worker.js"
 }
