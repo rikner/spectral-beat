@@ -4,6 +4,14 @@ interface IOnsetResultData {
 	value: number;
 }
 
+function createWeightingFunction(length: number, sampleRate: number): Float32Array {
+	const arr = new Float32Array(length);
+	for (let index = 0; index < arr.length; index++) {
+		arr[index] = 1 - index / length;
+	}
+	return arr;
+}
+
 class OnsetDetection {
 	private static readonly onsetBufferDurationS = 2.5;
 	private static readonly smoothingWindowLength = 2;
@@ -17,6 +25,8 @@ class OnsetDetection {
 	private shouldCalculateThreshold = true;
 	private threshold: number = 0;
 
+	private readonly weightingFunction: Float32Array;
+
 	constructor(sampleRate: number, bufferSize: number, frequencyBinCount: number) {
 		this.onsetValues = (() => {
 			const bufferDuration = bufferSize / sampleRate;
@@ -24,6 +34,7 @@ class OnsetDetection {
 			return new Float32Array(onsetValueCount);
 		})()
 		this.previousSpectrum = new Float32Array(frequencyBinCount);
+		this.weightingFunction = createWeightingFunction(frequencyBinCount, sampleRate);
 	}
 
 
@@ -42,11 +53,11 @@ class OnsetDetection {
 			return;
 		}
 
-		const linearSpectrum = spectrum.map(decibelToLinear);
+		const linearWeightedSpectrum = spectrum.map((value, index) => decibelToLinear(value) * this.weightingFunction[index]);
 
 		const flux = computeSpectralFlux(
 			this.previousSpectrum,
-			linearSpectrum
+			linearWeightedSpectrum
 		);
 
 		const smoothedFlux = (() => {
@@ -58,7 +69,7 @@ class OnsetDetection {
 			return (smoothingValuesSum + flux) / (smoothingValues.length + 1);
 		})();
 
-		this.previousSpectrum.set(linearSpectrum);
+		this.previousSpectrum.set(linearWeightedSpectrum);
 		this.onsetValues.set(this.onsetValues.subarray(1)); // shift
 		this.onsetValues[this.onsetValues.length - 1] = smoothedFlux; // push
 
